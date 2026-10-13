@@ -1,0 +1,15 @@
+# PDF processing
+PyMuPDF>=1.24,<2.0
+
+# Image processing
+Pillow>=10.4,<13.0
+
+# Configuration and environment variables
+PyYAML>=6.0,<7.0
+python-dotenv>=1.0,<2.0
+
+# Data validation / structured data
+pydantic>=2.8,<3.0
+
+# Progress bars
+tqdm>=4.66,<5.0

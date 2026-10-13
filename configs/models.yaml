@@ -1,0 +1,24 @@
+# Model Configurations for Multimodal RAG Pipeline
+
+embeddings:
+  text:
+    provider: "huggingface"
+    model_name: "sentence-transformers/all-MiniLM-L6-v2"
+    dimension: 384
+    batch_size: 32
+  vision:
+    provider: "huggingface"
+    model_name: "openai/clip-vit-base-patch32"
+    dimension: 512
+    batch_size: 16
+
+llm:
+  generation:
+    provider: "openai"
+    model_name: "gpt-4o"
+    temperature: 0.2
+    max_tokens: 2048
+  vision:
+    provider: "openai"
+    model_name: "gpt-4o"
+    temperature: 0.2

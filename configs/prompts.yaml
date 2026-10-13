@@ -1,0 +1,11 @@
+# System Prompt Templates for Multimodal RAG Pipeline
+
+qa_prompt: |
+  You are an expert multimodal technical assistant. Answer the user's question using the provided document text chunks and images.
+  Cite specific pages and chunk IDs when referencing facts.
+  If the context does not contain sufficient information, state that clearly.
+
+context_format: |
+  [Document: {document_id}]
+  [Page {page_number}]
+  {content}

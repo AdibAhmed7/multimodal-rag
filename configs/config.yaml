@@ -1,0 +1,28 @@
+# System Configuration for Multimodal RAG Pipeline
+
+project:
+  name: "multimodal-rag"
+  version: "0.1.0"
+
+ingestion:
+  supported_extensions:
+    - ".pdf"
+  extract_images: true
+  min_image_width: 50
+  min_image_height: 50
+
+chunking:
+  chunk_size: 1000
+  chunk_overlap: 150
+  boundary_separators:
+    - "\n\n"
+    - "\n"
+    - ". "
+    - " "
+
+storage:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  images_dir: "data/processed/images"
+  metadata_dir: "data/processed/metadata"
+  chunks_dir: "data/processed/chunks"

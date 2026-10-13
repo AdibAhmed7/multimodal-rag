@@ -1,0 +1,46 @@
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Cache & model weights
+.cache/
+huggingface_cache/
+models/*
+!models/.gitkeep
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Processed and generated runtime data
+data/processed/*
+!data/processed/.gitkeep
+data/generated/*
+!data/generated/.gitkeep
