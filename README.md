@@ -109,9 +109,15 @@ Transforms raw ingested pages into searchable, linked chunks.
 - [`SemanticChunker`](src/chunking/semantic_chunker.py): Orchestrates unified chunking with bidirectional reference graphs (`chunk.related_image_ids` and `image.related_text_chunk_ids`).
 - [`Chunk Models`](src/chunking/chunk_models.py): Strictly typed Pydantic V2 models (`TextChunk`, `ImageRecord`).
 
+### Phase 3: Text & Image Embeddings
+Converts chunks and visual figures into dense mathematical vectors for semantic search.
+- [`TextEmbeddingModel`](src/embeddings/text_embeddings.py): Encodes text chunks into dense 1024-dimensional normalized vectors using `BAAI/bge-m3`.
+- [`ImageEmbeddingModel`](src/embeddings/image_embeddings.py): Encodes figures and text-to-image queries into a shared 768-dimensional multimodal vector space using `google/siglip2-base-patch16-224`.
+- **Decoupled Vector Spaces**: BGE-M3 handles text-to-text queries; SigLIP 2 handles image-to-image and text-to-image queries.
+- **Persistent Artifacts**: Compact `.npz` storage (`vectors.npz`) paired with comprehensive manifests (`manifest.json`) mapping row indices to chunk/image IDs.
+
 ### Roadmap & Future Phases
-- **Phase 3: Embeddings Engine** — Dual-encoder setup with CLIP / SigLIP for images and modern sentence transformers / ColBERT for text.
-- **Phase 4: Vector Storage** — High-performance vector indexing using Qdrant / Chroma with payload filtering on document and page IDs.
+- **Phase 4: Vector Storage (Qdrant)** — Indexing text and image collections with payload filtering and metadata retrieval.
 - **Phase 5: Hybrid Retrieval & Reranking** — Dense + sparse BM25 retrieval with reciprocal rank fusion (RRF) and cross-encoder reranking.
 - **Phase 6: Multimodal LLM Generation** — Multi-image reasoning with vision models (e.g. Qwen2-VL, GPT-4o) with citation grounding.
 - **Phase 7: User Interface & Evaluation** — Streamlit multimodal chat UI with RAGAS evaluation metrics.
@@ -225,6 +231,21 @@ python scripts/prepare_chunks.py data/processed/metadata/example.json
 - `data/processed/chunks/example/text_chunks.json`
 - `data/processed/chunks/example/image_records.json`
 - `data/processed/chunks/example/document_chunks.json`
+
+### 3. Generate Multimodal Embeddings
+Generate BGE-M3 text vectors and SigLIP 2 image vectors:
+```bash
+python scripts/generate_embeddings.py data/processed/chunks/example
+```
+*Output:*
+- `data/processed/embeddings/example/vectors.npz` (contains `text_vectors` [1024D] and `image_vectors` [768D])
+- `data/processed/embeddings/example/manifest.json` (maps array rows to chunk & image metadata)
+
+### 4. Validate Generated Embeddings
+Verify shapes, dimensional consistency, and manifest mappings:
+```bash
+python scripts/test_embeddings.py data/processed/embeddings/example
+```
 
 ---
 

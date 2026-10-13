@@ -3,14 +3,14 @@
 embeddings:
   text:
     provider: "huggingface"
-    model_name: "sentence-transformers/all-MiniLM-L6-v2"
-    dimension: 384
-    batch_size: 32
+    model_name: "BAAI/bge-m3"
+    dimension: 1024
+    batch_size: 4
   vision:
     provider: "huggingface"
-    model_name: "openai/clip-vit-base-patch32"
-    dimension: 512
-    batch_size: 16
+    model_name: "google/siglip2-base-patch16-224"
+    dimension: 768
+    batch_size: 4
 
 llm:
   generation:

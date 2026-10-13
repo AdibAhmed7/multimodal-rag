@@ -13,3 +13,9 @@ pydantic>=2.8,<3.0
 
 # Progress bars
 tqdm>=4.66,<5.0
+
+# Phase 3: Embeddings
+torch
+transformers>=4.50
+sentence-transformers>=3.4
+numpy>=1.26,<3.0
