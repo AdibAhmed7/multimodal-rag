@@ -319,17 +319,32 @@ python scripts/ask_pdf.py --query "Explain the architecture of the neural networ
 Run the integrated router and visual generator (supporting image generation with Stable Diffusion Turbo alongside PDF retrieval and Qwen answering):
 
 ```bash
-# 1. Generate a new concept illustration only
+# 1. Automatic routing (intelligent intent detection)
 python scripts/ask_multimodal.py --query "Generate a professional illustration of a multimodal RAG architecture"
-
-# 2. Retrieve existing PDF diagrams only
 python scripts/ask_multimodal.py --query "Show me the architecture diagram from the PDF"
-
-# 3. Hybrid: Generate new diagram AND retrieve original PDF diagram
-python scripts/ask_multimodal.py --query "Generate a new neural network architecture illustration and show me the original diagram from the PDF"
-
-# 4. Standard evidence-grounded answer
+python scripts/ask_multimodal.py --query "Generate a new diagram and show the original PDF diagram"
 python scripts/ask_multimodal.py --query "Explain the architecture of the proposed system"
+
+# 2. Explicit independent operation flags
+python scripts/ask_multimodal.py --operation qa --query "Explain the architecture of the proposed system"
+python scripts/ask_multimodal.py --operation retrieve --query "Show me the diagram from the PDF"
+python scripts/ask_multimodal.py --operation generate --query "Generate a neural network diagram"
+```
+
+### 11. Standalone Core Operation Tools
+Execute each core capability completely independently:
+```bash
+# Dedicated PDF Question Answering
+python scripts/ask_pdf.py --query "Explain the architecture of the proposed system"
+
+# Dedicated Original Image Retrieval
+python scripts/retrieve_images.py --query "Find the architecture diagram in the PDF"
+
+# Dedicated New Image Generation
+python scripts/generate_image.py --prompt "A professional illustration of a neural network"
+
+# Run Core Operations Isolation Test Suite
+python scripts/test_core_operations.py
 ```
 
 ---
