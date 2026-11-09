@@ -105,3 +105,4 @@ def test_image_retriever_search(tmp_path):
         img_matches = retriever.search_by_image("dummy_path", limit=1)
         assert len(img_matches) == 1
         assert img_matches[0]["id"] == "img2"
+

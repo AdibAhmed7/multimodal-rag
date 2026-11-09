@@ -59,3 +59,4 @@ class TextRetriever:
                 "related_image_ids": payload.get("related_image_ids", []),
             })
         return results
+

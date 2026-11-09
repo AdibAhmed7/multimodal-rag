@@ -11,3 +11,4 @@ __all__ = [
     "reciprocal_rank_fusion",
     "MultimodalRetrievalPipeline",
 ]
+

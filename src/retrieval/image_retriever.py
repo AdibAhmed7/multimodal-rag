@@ -90,3 +90,4 @@ class ImageRetriever:
         """Image-to-image search using SigLIP 2 vision embeddings."""
         query_vector = self.query_encoder.encode_image(image_input)
         return self._search(query_vector, limit=limit, document_id=document_id)
+

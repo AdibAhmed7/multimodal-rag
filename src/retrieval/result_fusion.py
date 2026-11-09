@@ -36,3 +36,4 @@ def reciprocal_rank_fusion(
         key=lambda item: item["rrf_score"],
         reverse=True,
     )
+

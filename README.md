@@ -131,9 +131,15 @@ Retrieves text and visual evidence using decoupled vector spaces fused via Recip
 - [`reciprocal_rank_fusion`](src/retrieval/result_fusion.py): Merges heterogeneous rank positions using RRF ($k=60$) without conflating non-calibrated similarity score distributions.
 - [`MultimodalRetrievalPipeline`](src/retrieval/retrieval_pipeline.py): Unified retrieval facade coordinating encoders, retrievers, and rank fusion.
 
+### Phase 6: Context Building & Vision-Based Understanding
+Converts raw retrieval hits into an integrated, page-by-page multimodal context package.
+- [`ContextOrganizer`](src/context/context_organizer.py): Groups text chunks and images by document and page, sorting by chunk index and preserving bidirectional figure references.
+- [`ImageDescriber`](src/context/image_describer.py): Generates technical figure descriptions using `Qwen/Qwen2.5-VL-3B-Instruct`, with persistent JSON caching in `data/processed/image_descriptions/cache.json`.
+- [`ContextBuilder`](src/context/context_builder.py): Coordinates page aggregation, selective image description generation, and context statistics.
+- [`build_context.py`](scripts/build_context.py): CLI generating structured JSON context packages ready for vision-language answering models.
+
 ### Roadmap & Future Phases
-- **Phase 6: Context Building & Vision-Language Generation** — Multi-image reasoning with vision models (e.g. Qwen2-VL, GPT-4o) with citation grounding.
-- **Phase 7: User Interface & Evaluation** — Streamlit multimodal chat UI with RAGAS evaluation metrics.
+- **Phase 7: Multimodal Generation, UI & Evaluation** — Vision-language response generation, Streamlit chat interface, and evaluation metrics.
 
 ---
 
@@ -283,6 +289,16 @@ python scripts/test_image_retrieval.py --query "Find diagrams of neural networks
 
 # Multimodal retrieval with Reciprocal Rank Fusion (RRF)
 python scripts/test_multimodal_retrieval.py --query "Explain the Transformer and show its architecture diagram"
+```
+
+### 8. Build Structured Multimodal Context
+Organize retrieval evidence into page-grouped contexts with figure descriptions:
+```bash
+# Context building without image description model
+python scripts/build_context.py --query "Explain the architecture of the neural network and find its related diagram" --skip-image-descriptions
+
+# Context building with Qwen vision descriptions
+python scripts/build_context.py --query "Explain the architecture of the neural network and find its related diagram" --max-images-to-describe 3
 ```
 
 ---
