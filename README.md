@@ -138,8 +138,16 @@ Converts raw retrieval hits into an integrated, page-by-page multimodal context 
 - [`ContextBuilder`](src/context/context_builder.py): Coordinates page aggregation, selective image description generation, and context statistics.
 - [`build_context.py`](scripts/build_context.py): CLI generating structured JSON context packages ready for vision-language answering models.
 
+### Phase 7: LLM-Based Multimodal Answer Generation
+Generates grounded multimodal answers using Qwen2.5-VL with page citations and original attached visual figures.
+- [`QwenModel`](src/llm/model_loader.py): Vision-language model wrapper loading `Qwen/Qwen2.5-VL-3B-Instruct` with offline and resource resilience.
+- [`PromptBuilder`](src/llm/prompt_builder.py): Enforces strict evidence grounding, prevents hallucinations, and mandates `[Page N]` citations.
+- [`AnswerGenerator`](src/llm/answer_generator.py): Dispatches text evidence, page contexts, and original labeled raster images to Qwen.
+- [`ResponseFormatter`](src/llm/response_formatter.py): Structures answers alongside cited source pages, text chunks, and attached display images.
+- [`ask_pdf.py`](scripts/ask_pdf.py): End-to-end RAG CLI executing retrieval, context preparation, answer generation, and response persistence.
+
 ### Roadmap & Future Phases
-- **Phase 7: Multimodal Generation, UI & Evaluation** — Vision-language response generation, Streamlit chat interface, and evaluation metrics.
+- **Phase 8: User Interface & Evaluation** — Interactive Streamlit chat interface with image viewer, citation pill navigation, and RAGAS benchmark metrics.
 
 ---
 
@@ -299,6 +307,12 @@ python scripts/build_context.py --query "Explain the architecture of the neural 
 
 # Context building with Qwen vision descriptions
 python scripts/build_context.py --query "Explain the architecture of the neural network and find its related diagram" --max-images-to-describe 3
+```
+
+### 9. Ask Questions with Full Multimodal RAG
+Run the end-to-end pipeline to answer questions grounded in text and original PDF images:
+```bash
+python scripts/ask_pdf.py --query "Explain the architecture of the neural network and show the relevant diagram"
 ```
 
 ---

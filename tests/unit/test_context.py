@@ -153,3 +153,4 @@ def test_context_builder_with_mock_describer():
     ]
     assert len(described_images) == 1
     assert described_images[0]["description"] == "Mock description of neural diagram."
+

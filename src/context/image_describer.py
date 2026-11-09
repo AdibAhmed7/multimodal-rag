@@ -154,3 +154,4 @@ class ImageDescriber:
             logger.error(f"Failed to generate description for {image_path}: {e}")
             fallback = f"Visual figure from document page (description generation failed: {e})"
             return fallback
+
