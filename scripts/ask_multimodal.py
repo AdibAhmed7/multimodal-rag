@@ -54,6 +54,12 @@ def main():
         help="User question or image generation prompt",
     )
     parser.add_argument(
+        "--operation",
+        choices=["auto", "qa", "retrieve", "generate"],
+        default="auto",
+        help="Force one of the 3 core operations: 'qa', 'retrieve', 'generate', or 'auto' (default)",
+    )
+    parser.add_argument(
         "--document-id",
         default=None,
         help="Optional document ID filter for retrieval",
@@ -110,11 +116,34 @@ def main():
     print("=" * 65)
     print(f"Query: {args.query}\n")
 
-    # Step 1: Request Routing
-    router = RequestRouter()
-    routing = router.route(args.query)
+    # Step 1: Request Routing & Operation Selection
+    if args.operation == "qa":
+        routing = {
+            "intent": "answer",
+            "retrieve_pdf_images": True,
+            "generate_new_image": False,
+            "answer_question": True,
+        }
+    elif args.operation == "retrieve":
+        routing = {
+            "intent": "retrieve_pdf_images",
+            "retrieve_pdf_images": True,
+            "generate_new_image": False,
+            "answer_question": False,
+        }
+    elif args.operation == "generate":
+        routing = {
+            "intent": "generate_image",
+            "retrieve_pdf_images": False,
+            "generate_new_image": True,
+            "answer_question": False,
+        }
+    else:
+        router = RequestRouter()
+        routing = router.route(args.query)
+
     intent = routing["intent"]
-    print(f"[Router] Intent detected: '{intent}'")
+    print(f"[Router] Intent resolved: '{intent}' (operation mode: {args.operation})")
     print(
         f"         retrieve_pdf_images={routing['retrieve_pdf_images']} | "
         f"generate_new_image={routing['generate_new_image']} | "
