@@ -35,3 +35,4 @@ def test_rrf_combines_results():
     # Validate sorted descending by rrf_score
     scores = [r["rrf_score"] for r in results]
     assert scores == sorted(scores, reverse=True)
+

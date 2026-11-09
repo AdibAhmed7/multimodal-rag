@@ -17,3 +17,4 @@ def test_image_retrieval():
     router = RequestRouter()
     result = router.route("Show me the diagram from the PDF")
     assert result["intent"] == "retrieve_pdf_images"
+

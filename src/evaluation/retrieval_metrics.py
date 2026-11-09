@@ -48,3 +48,4 @@ def mean_reciprocal_rank(reciprocal_ranks: Sequence[float]) -> float:
     if not reciprocal_ranks:
         return 0.0
     return float(sum(reciprocal_ranks) / len(reciprocal_ranks))
+

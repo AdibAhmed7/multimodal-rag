@@ -33,3 +33,4 @@ def test_validate_citations_empty():
     assert result["has_citations"] is False
     assert result["citation_valid"] is True
     assert result["cited_pages"] == []
+

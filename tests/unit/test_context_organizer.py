@@ -27,3 +27,4 @@ def test_context_organizer():
     assert len(result) == 1
     assert result[0]["document_id"] == "example"
     assert len(result[0]["text_chunks"]) == 1
+

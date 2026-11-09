@@ -19,18 +19,18 @@
   "performance_metrics": [
     {
       "operation": "pipeline_initialization",
-      "duration_seconds": 7.8172,
-      "process_memory_mb": 2475.68
+      "duration_seconds": 5.7844,
+      "process_memory_mb": 2477.87
     },
     {
       "operation": "text_retrieval_benchmark",
-      "duration_seconds": 2.7192,
-      "process_memory_mb": 3641.83
+      "duration_seconds": 2.747,
+      "process_memory_mb": 3424.55
     },
     {
       "operation": "image_retrieval_benchmark",
-      "duration_seconds": 0.5682,
-      "process_memory_mb": 3639.96
+      "duration_seconds": 0.4519,
+      "process_memory_mb": 3425.06
     }
   ],
   "gpu_stats": null

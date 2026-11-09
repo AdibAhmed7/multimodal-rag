@@ -163,3 +163,4 @@ class RetrievalEvaluationRunner:
             },
             "queries": query_results,
         }
+

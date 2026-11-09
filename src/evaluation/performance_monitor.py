@@ -54,3 +54,4 @@ class PerformanceMonitor:
 
     def clear(self) -> None:
         self.results.clear()
+

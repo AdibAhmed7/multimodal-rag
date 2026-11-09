@@ -146,8 +146,29 @@ Generates grounded multimodal answers using Qwen2.5-VL with page citations and o
 - [`ResponseFormatter`](src/llm/response_formatter.py): Structures answers alongside cited source pages, text chunks, and attached display images.
 - [`ask_pdf.py`](scripts/ask_pdf.py): End-to-end RAG CLI executing retrieval, context preparation, answer generation, and response persistence.
 
-### Roadmap & Future Phases
-- **Phase 8: User Interface & Evaluation** — Interactive Streamlit chat interface with image viewer, citation pill navigation, and RAGAS benchmark metrics.
+### Phase 8: AI Image Generation & Request Routing
+Routes incoming user queries between retrieval, question answering, and on-demand AI diagram generation.
+- [`RequestRouter`](src/generation/request_router.py): Detects user intents (`answer`, `retrieve_pdf_images`, `generate_image`, or combined) using deterministic pattern matching and semantic classification.
+- [`ImagePromptBuilder`](src/generation/image_prompt_builder.py): Refines user requests with retrieved PDF context into production-quality diffusion prompts.
+- [`ImageGenerator`](src/generation/image_generator.py): Generates technical diagrams and illustrations locally using `stabilityai/sd-turbo` in 1–4 inference steps.
+- [`VisualResponseBuilder`](src/generation/visual_response_builder.py): Compiles answers, retrieved original PDF figures, and newly synthesized diagrams into a unified multimodal payload.
+- [`ask_multimodal.py`](scripts/ask_multimodal.py): Multi-operation CLI supporting `--operation auto|qa|retrieve|generate` and fast CPU synthesis mode.
+
+### Phase 9: Streamlit Web User Interface
+Interactive visual web interface for document management and visual multimodal conversation.
+- [`app.py`](app.py): Streamlit dashboard with sidebar document upload, active document selector, and conversational chat stream.
+- [`DocumentManager`](src/ui/document_manager.py): End-to-end PDF upload and automatic 4-stage pipeline orchestration (ingestion -> chunking -> embeddings -> Qdrant indexing).
+- [`ChatInterface`](src/ui/chat_interface.py): Subprocess execution wrapper ensuring memory isolation and automatic recovery.
+- [`DisplayManager`](src/ui/display_manager.py): Renders retrieved figures, generated images, and source citation pill cards.
+
+### Phase 10: Testing, Evaluation & Performance Optimization
+Comprehensive testing hierarchy, empirical search evaluation, and system resource profiling.
+- **Automated Test Suite (`scripts/run_tests.py`)**: 63 test cases covering unit tests, integration tests, and citation accuracy (100% pass rate).
+- **Retrieval Metrics (`src/evaluation/retrieval_metrics.py`)**: Automated calculation of Precision@K, Recall@K, and Mean Reciprocal Rank (MRR).
+- **Citation Validation (`src/evaluation/citation_validator.py`)**: 100% verified citation fidelity guaranteeing that cited `[Page N]` references map to actual evidence.
+- **Performance Profiling (`src/evaluation/performance_monitor.py`)**: System latency and RAM RSS memory tracking via `psutil`.
+- **Publication Charts & Academic Report**: Generated via `scripts/generate_evaluation_report.py` into `evaluation/reports/`.
+
 
 ---
 

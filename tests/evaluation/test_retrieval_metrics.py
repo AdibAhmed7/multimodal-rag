@@ -42,3 +42,4 @@ def test_mean_reciprocal_rank():
     scores = [1.0, 0.5, 0.25]
     mrr = mean_reciprocal_rank(scores)
     assert abs(mrr - (1.75 / 3)) < 0.001
+

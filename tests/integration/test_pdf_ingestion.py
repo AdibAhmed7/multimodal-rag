@@ -20,3 +20,4 @@ def test_pdf_ingestion():
     assert metadata
     assert metadata.get("page_count", 0) > 0
     assert len(metadata.get("pages", [])) > 0
+

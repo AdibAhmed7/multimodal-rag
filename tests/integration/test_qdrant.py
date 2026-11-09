@@ -17,3 +17,4 @@ def test_qdrant_collections():
         assert image_info.points_count > 0
     finally:
         manager.close()
+

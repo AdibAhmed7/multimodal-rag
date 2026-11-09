@@ -23,3 +23,4 @@ def validate_citations(
         "citation_valid": len(invalid_pages) == 0,
         "has_citations": len(cited_pages) > 0,
     }
+

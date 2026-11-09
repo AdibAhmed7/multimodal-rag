@@ -23,3 +23,4 @@ def test_multimodal_retrieval():
             assert item.get("content") is not None
     finally:
         manager.close()
+
