@@ -31,3 +31,6 @@ torchvision
 # Phase 8: Image generation
 diffusers>=0.32,<1.0
 safetensors>=0.4
+
+# Phase 9: User interface
+streamlit>=1.40,<2.0

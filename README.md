@@ -347,6 +347,13 @@ python scripts/generate_image.py --prompt "A professional illustration of a neur
 python scripts/test_core_operations.py
 ```
 
+### 12. Web User Interface with Streamlit (Phase 9)
+Launch the interactive visual web interface to upload PDFs, search, query, and view extracted and generated figures:
+```bash
+python -m streamlit run app.py
+```
+Then open `http://localhost:8501` in your browser.
+
 ---
 
 ## 📊 Data & Output Schemas
