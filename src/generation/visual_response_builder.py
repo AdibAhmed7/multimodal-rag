@@ -51,3 +51,4 @@ class VisualResponseBuilder:
             },
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
+

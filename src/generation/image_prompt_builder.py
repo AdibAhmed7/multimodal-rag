@@ -39,3 +39,4 @@ Visual requirements:
             )
 
         return prompt.strip()
+

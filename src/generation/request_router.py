@@ -107,3 +107,4 @@ class RequestRouter:
             "generate_new_image": generate_new_image,
             "answer_question": answer_question,
         }
+

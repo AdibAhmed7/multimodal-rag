@@ -138,3 +138,4 @@ class TestVisualResponseBuilder:
         assert response["statistics"]["generated_image_count"] == 1
         assert response["statistics"]["source_count"] == 1
         assert "generated_at" in response
+
