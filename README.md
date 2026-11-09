@@ -123,9 +123,16 @@ Stores dense embeddings and complete metadata in local embedded Qdrant collectio
 - [`ImageIndexer`](src/vectorstore/index_images.py): Upserts image embeddings alongside image disk paths, dimensions, captions, surrounding text, and linked chunk references using deterministic UUIDv5 identifiers.
 - **Persistent Storage**: Local on-disk database stored in `data/processed/qdrant/`.
 
+### Phase 5: Multimodal Retrieval Engine
+Retrieves text and visual evidence using decoupled vector spaces fused via Reciprocal Rank Fusion.
+- [`QueryEncoder`](src/retrieval/query_encoder.py): Dispatches user queries to BGE-M3 (for text chunks) and SigLIP 2 (for image matching and image-to-image similarity).
+- [`TextRetriever`](src/retrieval/text_retriever.py): Searches `text_chunks` with optional metadata filtering (`document_id`).
+- [`ImageRetriever`](src/retrieval/image_retriever.py): Performs text-to-image and image-to-image searches on `document_images`.
+- [`reciprocal_rank_fusion`](src/retrieval/result_fusion.py): Merges heterogeneous rank positions using RRF ($k=60$) without conflating non-calibrated similarity score distributions.
+- [`MultimodalRetrievalPipeline`](src/retrieval/retrieval_pipeline.py): Unified retrieval facade coordinating encoders, retrievers, and rank fusion.
+
 ### Roadmap & Future Phases
-- **Phase 5: Hybrid Retrieval & Reranking** — Dense + sparse BM25 retrieval with reciprocal rank fusion (RRF) and cross-encoder reranking.
-- **Phase 6: Multimodal LLM Generation** — Multi-image reasoning with vision models (e.g. Qwen2-VL, GPT-4o) with citation grounding.
+- **Phase 6: Context Building & Vision-Language Generation** — Multi-image reasoning with vision models (e.g. Qwen2-VL, GPT-4o) with citation grounding.
 - **Phase 7: User Interface & Evaluation** — Streamlit multimodal chat UI with RAGAS evaluation metrics.
 
 ---
@@ -263,6 +270,19 @@ python scripts/index_vectors.py data/processed/embeddings/example
 Inspect indexed collections and sample payloads:
 ```bash
 python scripts/test_vectorstore.py
+```
+
+### 7. Run Multimodal Retrieval
+Search across text chunks, document images, or both simultaneously:
+```bash
+# Text-to-text retrieval
+python scripts/test_text_retrieval.py --query "Explain the Transformer architecture"
+
+# Text-to-image retrieval
+python scripts/test_image_retrieval.py --query "Find diagrams of neural networks"
+
+# Multimodal retrieval with Reciprocal Rank Fusion (RRF)
+python scripts/test_multimodal_retrieval.py --query "Explain the Transformer and show its architecture diagram"
 ```
 
 ---
