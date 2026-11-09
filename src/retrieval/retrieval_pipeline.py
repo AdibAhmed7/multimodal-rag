@@ -93,5 +93,6 @@ class MultimodalRetrievalPipeline:
             "text_results": text_results,
             "image_results": image_results,
             "fused_results": fused,
+            "combined_results": fused,
         }
 

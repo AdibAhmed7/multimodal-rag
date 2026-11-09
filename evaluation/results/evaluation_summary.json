@@ -1,0 +1,37 @@
+{
+  "evaluation_status": "success",
+  "text_retrieval": {
+    "precision_at_k": 0.2,
+    "recall_at_k": 1.0,
+    "mrr": 0.9,
+    "page_precision_at_k": 0.2,
+    "page_recall_at_k": 1.0,
+    "page_mrr": 0.9
+  },
+  "image_retrieval": {
+    "precision_at_k": 0.06,
+    "recall_at_k": 0.2,
+    "mrr": 0.25,
+    "page_precision_at_k": 0.06,
+    "page_recall_at_k": 0.25,
+    "page_mrr": 0.25
+  },
+  "performance_metrics": [
+    {
+      "operation": "pipeline_initialization",
+      "duration_seconds": 7.8172,
+      "process_memory_mb": 2475.68
+    },
+    {
+      "operation": "text_retrieval_benchmark",
+      "duration_seconds": 2.7192,
+      "process_memory_mb": 3641.83
+    },
+    {
+      "operation": "image_retrieval_benchmark",
+      "duration_seconds": 0.5682,
+      "process_memory_mb": 3639.96
+    }
+  ],
+  "gpu_stats": null
+}

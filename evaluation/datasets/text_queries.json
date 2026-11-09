@@ -1,0 +1,92 @@
+[
+  {
+    "query_id": "T001",
+    "query": "What is routing and how does the network layer find paths?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p006_c000"
+    ],
+    "relevant_pages": [6]
+  },
+  {
+    "query_id": "T002",
+    "query": "What is forwarding and what does a router do when data arrives?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p007_c000"
+    ],
+    "relevant_pages": [7]
+  },
+  {
+    "query_id": "T003",
+    "query": "What is the role of the Garbage Collection Timer in RIP?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p186_c000"
+    ],
+    "relevant_pages": [186]
+  },
+  {
+    "query_id": "T004",
+    "query": "How does Split Horizon solve network instability in distance-vector routing?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p150_c000"
+    ],
+    "relevant_pages": [150]
+  },
+  {
+    "query_id": "T005",
+    "query": "Explain the operation and purpose of Internal BGP iBGP.",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p210_c000"
+    ],
+    "relevant_pages": [210]
+  },
+  {
+    "query_id": "T006",
+    "query": "How does NAT translation table work with one IP address?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p110_c000"
+    ],
+    "relevant_pages": [110]
+  },
+  {
+    "query_id": "T007",
+    "query": "What is the general idea of unicast routing and relay stations?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p130_c000"
+    ],
+    "relevant_pages": [130]
+  },
+  {
+    "query_id": "T008",
+    "query": "What is the Maximum Transfer Unit MTU and why does fragmentation occur?",
+    "document_id": "network layer",
+    "relevant_chunk_ids": [
+      "network layer_p027_c000"
+    ],
+    "relevant_pages": [27]
+  },
+  {
+    "query_id": "T009",
+    "query": "Introduction to Transformers and attention mechanism.",
+    "document_id": "example",
+    "relevant_chunk_ids": [
+      "example_p001_c000"
+    ],
+    "relevant_pages": [1]
+  },
+  {
+    "query_id": "T010",
+    "query": "Explain the Transformer encoder and decoder pipeline.",
+    "document_id": "example",
+    "relevant_chunk_ids": [
+      "example_p003_c000"
+    ],
+    "relevant_pages": [3]
+  }
+]

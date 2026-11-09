@@ -1,0 +1,72 @@
+[
+  {
+    "query_id": "A001",
+    "query": "What is the difference between routing and forwarding?",
+    "document_id": "network layer",
+    "reference_answer": "Routing is the plan-making part where the network layer finds the best path from source to destination using routing protocols. Forwarding is the action part where each router consults a forwarding table to direct arriving data packets.",
+    "relevant_pages": [6, 7]
+  },
+  {
+    "query_id": "A002",
+    "query": "What is the role of the Garbage Collection Timer in RIP and how long is it?",
+    "document_id": "network layer",
+    "reference_answer": "The Garbage Collection Timer cleans up old invalid route information. When a route becomes invalid, it is advertised with a metric of 16 (unreachable) and a timer is set to 120 seconds before final removal.",
+    "relevant_pages": [186]
+  },
+  {
+    "query_id": "A003",
+    "query": "How does Split Horizon solve network instability in distance vector routing?",
+    "document_id": "network layer",
+    "reference_answer": "Split Horizon prevents routing loops by ensuring that a router does not advertise a route back out the same interface through which it learned it.",
+    "relevant_pages": [150]
+  },
+  {
+    "query_id": "A004",
+    "query": "Explain the purpose of Internal BGP (iBGP).",
+    "document_id": "network layer",
+    "reference_answer": "Internal BGP operates within the same autonomous system to share external routing information learned from eBGP with all internal routers.",
+    "relevant_pages": [210]
+  },
+  {
+    "query_id": "A005",
+    "query": "How does NAT work with a translation table?",
+    "document_id": "network layer",
+    "reference_answer": "A NAT router uses a translation table to map private IP addresses and port numbers from an internal network to a public IP address and port numbers for communication over the Internet.",
+    "relevant_pages": [110]
+  },
+  {
+    "query_id": "A006",
+    "query": "What is Maximum Transfer Unit (MTU)?",
+    "document_id": "network layer",
+    "reference_answer": "MTU defines the maximum size of a packet or frame that can be transmitted across a given network link without requiring fragmentation.",
+    "relevant_pages": [27]
+  },
+  {
+    "query_id": "A007",
+    "query": "Explain unicast routing using the relay station analogy.",
+    "document_id": "network layer",
+    "reference_answer": "Unicast routing is like sending a message through postal relay stations where routers act as relay stations using forwarding tables to decide where to pass the packet next until it reaches the destination.",
+    "relevant_pages": [130]
+  },
+  {
+    "query_id": "A008",
+    "query": "What is the core idea of the Transformer architecture?",
+    "document_id": "example",
+    "reference_answer": "The Transformer is a deep learning model introduced in 2017 that relies entirely on an attention mechanism to model dependencies without recurrence or convolutions.",
+    "relevant_pages": [1, 2]
+  },
+  {
+    "query_id": "A009",
+    "query": "Explain the Transformer encoder and decoder pipeline.",
+    "document_id": "example",
+    "reference_answer": "The encoder maps input sequences to continuous representations, and the decoder generates output sequences one token at a time using encoder representations and self-attention.",
+    "relevant_pages": [3]
+  },
+  {
+    "query_id": "A010",
+    "query": "What are the common DHCP message types?",
+    "document_id": "network layer",
+    "reference_answer": "The eight DHCP message types are DHCPDISCOVER, DHCPOFFER, DHCPREQUEST, DHCPDECLINE, DHCPACK, DHCPNACK, DHCPRELEASE, and DHCPINFORM.",
+    "relevant_pages": [95]
+  }
+]

@@ -34,3 +34,11 @@ safetensors>=0.4
 
 # Phase 9: User interface
 streamlit>=1.40,<2.0
+
+# Phase 10: Testing and evaluation
+pytest>=8.0,<10.0
+pytest-cov>=5.0,<8.0
+psutil>=6.0,<8.0
+pandas>=2.2,<4.0
+matplotlib>=3.9,<4.0
+

@@ -1,0 +1,322 @@
+{
+  "k": 5,
+  "queries_evaluated": 10,
+  "summary": {
+    "precision_at_k": 0.06,
+    "recall_at_k": 0.2,
+    "mrr": 0.25,
+    "page_precision_at_k": 0.06,
+    "page_recall_at_k": 0.25,
+    "page_mrr": 0.25
+  },
+  "queries": [
+    {
+      "query_id": "I001",
+      "query": "DHCP Operation client server message sequence",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_058_img_002",
+        "page_095_img_002",
+        "page_126_img_009",
+        "page_084_img_002",
+        "page_219_img_001"
+      ],
+      "relevant_ids": [
+        "page_096_img_001",
+        "page_095_img_002"
+      ],
+      "retrieved_pages": [
+        58,
+        95,
+        126,
+        84,
+        219
+      ],
+      "relevant_pages": [
+        95,
+        96
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 0.5,
+      "reciprocal_rank": 0.5,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 0.5,
+      "page_reciprocal_rank": 0.5
+    },
+    {
+      "query_id": "I002",
+      "query": "Forwarding tables after all routers booted garbage collection timer",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_186_img_003",
+        "page_058_img_002",
+        "page_082_img_008",
+        "page_145_img_003",
+        "page_126_img_009"
+      ],
+      "relevant_ids": [
+        "page_186_img_003",
+        "page_186_img_002"
+      ],
+      "retrieved_pages": [
+        186,
+        58,
+        82,
+        145,
+        126
+      ],
+      "relevant_pages": [
+        186
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 0.5,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "I003",
+      "query": "Maximum Transfer Unit MTU packet transmission across networks",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_084_img_002",
+        "page_058_img_002",
+        "page_164_img_008",
+        "page_164_img_007",
+        "page_084_img_003"
+      ],
+      "relevant_ids": [
+        "page_027_img_001"
+      ],
+      "retrieved_pages": [
+        84,
+        58,
+        164,
+        164,
+        84
+      ],
+      "relevant_pages": [
+        27
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I004",
+      "query": "Transformer model architecture diagram self-attention layers",
+      "document_id": "example",
+      "retrieved_ids": [
+        "page_002_img_001"
+      ],
+      "relevant_ids": [
+        "page_002_img_001"
+      ],
+      "retrieved_pages": [
+        2
+      ],
+      "relevant_pages": [
+        2
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "I005",
+      "query": "Address Translation NAT outgoing packets mapping table",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_145_img_003",
+        "page_186_img_003",
+        "page_219_img_001",
+        "page_095_img_002",
+        "page_124_img_001"
+      ],
+      "relevant_ids": [
+        "page_108_img_002",
+        "page_108_img_001"
+      ],
+      "retrieved_pages": [
+        145,
+        186,
+        219,
+        95,
+        124
+      ],
+      "relevant_pages": [
+        108
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I006",
+      "query": "Two-Node Loop routing instability problem",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_186_img_003",
+        "page_058_img_002",
+        "page_046_img_002",
+        "page_145_img_003",
+        "page_084_img_002"
+      ],
+      "relevant_ids": [
+        "page_148_img_006",
+        "page_148_img_001"
+      ],
+      "retrieved_pages": [
+        186,
+        58,
+        46,
+        145,
+        84
+      ],
+      "relevant_pages": [
+        148
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I007",
+      "query": "Distance-Vector Routing Algorithm flowchart",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_186_img_003",
+        "page_145_img_003",
+        "page_095_img_002",
+        "page_058_img_002",
+        "page_181_img_002"
+      ],
+      "relevant_ids": [
+        "page_146_img_001"
+      ],
+      "retrieved_pages": [
+        186,
+        145,
+        95,
+        58,
+        181
+      ],
+      "relevant_pages": [
+        146
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I008",
+      "query": "Bellman-Ford Equation finding shortest paths",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_186_img_003",
+        "page_058_img_002",
+        "page_148_img_006",
+        "page_145_img_003",
+        "page_084_img_002"
+      ],
+      "relevant_ids": [
+        "page_139_img_001"
+      ],
+      "retrieved_pages": [
+        186,
+        58,
+        148,
+        145,
+        84
+      ],
+      "relevant_pages": [
+        139
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I009",
+      "query": "Path-Vector Algorithm lines and routing initialization",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_095_img_002",
+        "page_186_img_003",
+        "page_145_img_003",
+        "page_126_img_009",
+        "page_181_img_002"
+      ],
+      "relevant_ids": [
+        "page_166_img_001"
+      ],
+      "retrieved_pages": [
+        95,
+        186,
+        145,
+        126,
+        181
+      ],
+      "relevant_pages": [
+        166
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    },
+    {
+      "query_id": "I010",
+      "query": "RIP Messages client and server response exchange",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "page_186_img_003",
+        "page_126_img_009",
+        "page_145_img_003",
+        "page_058_img_002",
+        "page_193_img_005"
+      ],
+      "relevant_ids": [
+        "page_181_img_002",
+        "page_181_img_001"
+      ],
+      "retrieved_pages": [
+        186,
+        126,
+        145,
+        58,
+        193
+      ],
+      "relevant_pages": [
+        181
+      ],
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "page_precision_at_k": 0.0,
+      "page_recall_at_k": 0.0,
+      "page_reciprocal_rank": 0.0
+    }
+  ]
+}

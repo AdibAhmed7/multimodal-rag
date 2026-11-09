@@ -56,3 +56,18 @@ class TextChunker:
                 start = max(start + 1, end - self.overlap)
 
         return chunks
+
+    def chunk_text(
+        self,
+        text: str,
+        document_id: str = "test_document",
+        page_number: int = 1,
+        source_file: str = "test.pdf",
+    ) -> list[TextChunk]:
+        """Convenience method to chunk raw text for a specific page."""
+        return self.chunk_document({
+            "document_id": document_id,
+            "filename": source_file,
+            "pages": [{"page_number": page_number, "text": text}],
+        })
+

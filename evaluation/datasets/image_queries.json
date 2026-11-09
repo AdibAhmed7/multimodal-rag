@@ -1,0 +1,97 @@
+[
+  {
+    "query_id": "I001",
+    "query": "DHCP Operation client server message sequence",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_096_img_001",
+      "page_095_img_002"
+    ],
+    "relevant_pages": [95, 96]
+  },
+  {
+    "query_id": "I002",
+    "query": "Forwarding tables after all routers booted garbage collection timer",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_186_img_003",
+      "page_186_img_002"
+    ],
+    "relevant_pages": [186]
+  },
+  {
+    "query_id": "I003",
+    "query": "Maximum Transfer Unit MTU packet transmission across networks",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_027_img_001"
+    ],
+    "relevant_pages": [27]
+  },
+  {
+    "query_id": "I004",
+    "query": "Transformer model architecture diagram self-attention layers",
+    "document_id": "example",
+    "relevant_image_ids": [
+      "page_002_img_001"
+    ],
+    "relevant_pages": [2]
+  },
+  {
+    "query_id": "I005",
+    "query": "Address Translation NAT outgoing packets mapping table",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_108_img_002",
+      "page_108_img_001"
+    ],
+    "relevant_pages": [108]
+  },
+  {
+    "query_id": "I006",
+    "query": "Two-Node Loop routing instability problem",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_148_img_006",
+      "page_148_img_001"
+    ],
+    "relevant_pages": [148]
+  },
+  {
+    "query_id": "I007",
+    "query": "Distance-Vector Routing Algorithm flowchart",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_146_img_001"
+    ],
+    "relevant_pages": [146]
+  },
+  {
+    "query_id": "I008",
+    "query": "Bellman-Ford Equation finding shortest paths",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_139_img_001"
+    ],
+    "relevant_pages": [139]
+  },
+  {
+    "query_id": "I009",
+    "query": "Path-Vector Algorithm lines and routing initialization",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_166_img_001"
+    ],
+    "relevant_pages": [166]
+  },
+  {
+    "query_id": "I010",
+    "query": "RIP Messages client and server response exchange",
+    "document_id": "network layer",
+    "relevant_image_ids": [
+      "page_181_img_002",
+      "page_181_img_001"
+    ],
+    "relevant_pages": [181]
+  }
+]

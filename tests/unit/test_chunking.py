@@ -68,6 +68,23 @@ def test_text_chunker_basic():
     assert chunks[0].content == "Short page text."
 
 
+def test_text_chunking():
+    chunker = TextChunker(chunk_size=1000, overlap=150)
+    text = "This is a test sentence. " * 200
+    chunks = chunker.chunk_text(
+        text,
+        document_id="test_document",
+        page_number=1,
+        source_file="test.pdf",
+    )
+    assert len(chunks) > 1
+    for chunk in chunks:
+        assert chunk.content.strip()
+        assert chunk.page_number == 1
+        assert chunk.document_id == "test_document"
+
+
+
 def test_image_chunker_linking():
     text_chunker = TextChunker()
     image_chunker = ImageChunker()

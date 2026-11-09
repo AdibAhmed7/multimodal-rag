@@ -1,0 +1,316 @@
+{
+  "k": 5,
+  "queries_evaluated": 10,
+  "summary": {
+    "precision_at_k": 0.2,
+    "recall_at_k": 1.0,
+    "mrr": 0.9,
+    "page_precision_at_k": 0.2,
+    "page_recall_at_k": 1.0,
+    "page_mrr": 0.9
+  },
+  "queries": [
+    {
+      "query_id": "T001",
+      "query": "What is routing and how does the network layer find paths?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p006_c000",
+        "network layer_p007_c000",
+        "network layer_p129_c000",
+        "network layer_p168_c000",
+        "network layer_p197_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p006_c000"
+      ],
+      "retrieved_pages": [
+        6,
+        7,
+        129,
+        168,
+        197
+      ],
+      "relevant_pages": [
+        6
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T002",
+      "query": "What is forwarding and what does a router do when data arrives?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p007_c000",
+        "network layer_p178_c000",
+        "network layer_p006_c000",
+        "network layer_p016_c000",
+        "network layer_p184_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p007_c000"
+      ],
+      "retrieved_pages": [
+        7,
+        178,
+        6,
+        16,
+        184
+      ],
+      "relevant_pages": [
+        7
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T003",
+      "query": "What is the role of the Garbage Collection Timer in RIP?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p186_c000",
+        "network layer_p185_c000",
+        "network layer_p180_c000",
+        "network layer_p189_c000",
+        "network layer_p183_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p186_c000"
+      ],
+      "retrieved_pages": [
+        186,
+        185,
+        180,
+        189,
+        183
+      ],
+      "relevant_pages": [
+        186
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T004",
+      "query": "How does Split Horizon solve network instability in distance-vector routing?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p150_c000",
+        "network layer_p146_c000",
+        "network layer_p152_c000",
+        "network layer_p138_c000",
+        "network layer_p151_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p150_c000"
+      ],
+      "retrieved_pages": [
+        150,
+        146,
+        152,
+        138,
+        151
+      ],
+      "relevant_pages": [
+        150
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T005",
+      "query": "Explain the operation and purpose of Internal BGP iBGP.",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p210_c000",
+        "network layer_p208_c000",
+        "network layer_p206_c000",
+        "network layer_p223_c000",
+        "network layer_p215_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p210_c000"
+      ],
+      "retrieved_pages": [
+        210,
+        208,
+        206,
+        223,
+        215
+      ],
+      "relevant_pages": [
+        210
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T006",
+      "query": "How does NAT translation table work with one IP address?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p104_c000",
+        "network layer_p110_c000",
+        "network layer_p109_c000",
+        "network layer_p106_c000",
+        "network layer_p113_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p110_c000"
+      ],
+      "retrieved_pages": [
+        104,
+        110,
+        109,
+        106,
+        113
+      ],
+      "relevant_pages": [
+        110
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 0.5,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 0.5
+    },
+    {
+      "query_id": "T007",
+      "query": "What is the general idea of unicast routing and relay stations?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p130_c000",
+        "network layer_p129_c000",
+        "network layer_p128_c000",
+        "network layer_p167_c000",
+        "network layer_p141_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p130_c000"
+      ],
+      "retrieved_pages": [
+        130,
+        129,
+        128,
+        167,
+        141
+      ],
+      "relevant_pages": [
+        130
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T008",
+      "query": "What is the Maximum Transfer Unit MTU and why does fragmentation occur?",
+      "document_id": "network layer",
+      "retrieved_ids": [
+        "network layer_p027_c000",
+        "network layer_p028_c000",
+        "network layer_p034_c000",
+        "network layer_p028_c001",
+        "network layer_p023_c000"
+      ],
+      "relevant_ids": [
+        "network layer_p027_c000"
+      ],
+      "retrieved_pages": [
+        27,
+        28,
+        34,
+        28,
+        23
+      ],
+      "relevant_pages": [
+        27
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    },
+    {
+      "query_id": "T009",
+      "query": "Introduction to Transformers and attention mechanism.",
+      "document_id": "example",
+      "retrieved_ids": [
+        "example_p002_c000",
+        "example_p001_c000",
+        "example_p003_c000"
+      ],
+      "relevant_ids": [
+        "example_p001_c000"
+      ],
+      "retrieved_pages": [
+        2,
+        1,
+        3
+      ],
+      "relevant_pages": [
+        1
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 0.5,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 0.5
+    },
+    {
+      "query_id": "T010",
+      "query": "Explain the Transformer encoder and decoder pipeline.",
+      "document_id": "example",
+      "retrieved_ids": [
+        "example_p003_c000",
+        "example_p002_c000",
+        "example_p001_c000"
+      ],
+      "relevant_ids": [
+        "example_p003_c000"
+      ],
+      "retrieved_pages": [
+        3,
+        2,
+        1
+      ],
+      "relevant_pages": [
+        3
+      ],
+      "precision_at_k": 0.2,
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "page_precision_at_k": 0.2,
+      "page_recall_at_k": 1.0,
+      "page_reciprocal_rank": 1.0
+    }
+  ]
+}
