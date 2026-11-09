@@ -315,6 +315,23 @@ Run the end-to-end pipeline to answer questions grounded in text and original PD
 python scripts/ask_pdf.py --query "Explain the architecture of the neural network and show the relevant diagram"
 ```
 
+### 10. Visual Generation & Multimodal Orchestration (Phase 8)
+Run the integrated router and visual generator (supporting image generation with Stable Diffusion Turbo alongside PDF retrieval and Qwen answering):
+
+```bash
+# 1. Generate a new concept illustration only
+python scripts/ask_multimodal.py --query "Generate a professional illustration of a multimodal RAG architecture"
+
+# 2. Retrieve existing PDF diagrams only
+python scripts/ask_multimodal.py --query "Show me the architecture diagram from the PDF"
+
+# 3. Hybrid: Generate new diagram AND retrieve original PDF diagram
+python scripts/ask_multimodal.py --query "Generate a new neural network architecture illustration and show me the original diagram from the PDF"
+
+# 4. Standard evidence-grounded answer
+python scripts/ask_multimodal.py --query "Explain the architecture of the proposed system"
+```
+
 ---
 
 ## 📊 Data & Output Schemas
