@@ -116,8 +116,14 @@ Converts chunks and visual figures into dense mathematical vectors for semantic 
 - **Decoupled Vector Spaces**: BGE-M3 handles text-to-text queries; SigLIP 2 handles image-to-image and text-to-image queries.
 - **Persistent Artifacts**: Compact `.npz` storage (`vectors.npz`) paired with comprehensive manifests (`manifest.json`) mapping row indices to chunk/image IDs.
 
+### Phase 4: Vector Database Setup and Indexing (Qdrant)
+Stores dense embeddings and complete metadata in local embedded Qdrant collections.
+- [`QdrantManager`](src/vectorstore/qdrant_manager.py): Embedded Qdrant client manager that provisions `text_chunks` (1024D, Cosine) and `document_images` (768D, Cosine).
+- [`TextIndexer`](src/vectorstore/index_text.py): Upserts text embeddings alongside full chunk contents, source filenames, page numbers, and bidirectional image references using deterministic UUIDv5 identifiers.
+- [`ImageIndexer`](src/vectorstore/index_images.py): Upserts image embeddings alongside image disk paths, dimensions, captions, surrounding text, and linked chunk references using deterministic UUIDv5 identifiers.
+- **Persistent Storage**: Local on-disk database stored in `data/processed/qdrant/`.
+
 ### Roadmap & Future Phases
-- **Phase 4: Vector Storage (Qdrant)** — Indexing text and image collections with payload filtering and metadata retrieval.
 - **Phase 5: Hybrid Retrieval & Reranking** — Dense + sparse BM25 retrieval with reciprocal rank fusion (RRF) and cross-encoder reranking.
 - **Phase 6: Multimodal LLM Generation** — Multi-image reasoning with vision models (e.g. Qwen2-VL, GPT-4o) with citation grounding.
 - **Phase 7: User Interface & Evaluation** — Streamlit multimodal chat UI with RAGAS evaluation metrics.
@@ -245,6 +251,18 @@ python scripts/generate_embeddings.py data/processed/chunks/example
 Verify shapes, dimensional consistency, and manifest mappings:
 ```bash
 python scripts/test_embeddings.py data/processed/embeddings/example
+```
+
+### 5. Index Vectors into Local Qdrant
+Create local collections and store embeddings with metadata and deterministic UUIDv5 points:
+```bash
+python scripts/index_vectors.py data/processed/embeddings/example
+```
+
+### 6. Verify Vectorstore Collections
+Inspect indexed collections and sample payloads:
+```bash
+python scripts/test_vectorstore.py
 ```
 
 ---

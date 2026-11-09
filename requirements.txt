@@ -19,3 +19,6 @@ torch
 transformers>=4.50
 sentence-transformers>=3.4
 numpy>=1.26,<3.0
+
+# Phase 4: Vector database
+qdrant-client>=1.12,<2.0
