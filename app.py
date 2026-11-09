@@ -169,3 +169,4 @@ if prompt := st.chat_input("Ask a question about the PDF or request a technical 
                     )
                 except Exception as err:
                     st.error(f"Error processing request: {str(err)}")
+

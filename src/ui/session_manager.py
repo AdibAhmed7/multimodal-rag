@@ -36,3 +36,4 @@ def add_message(role: str, content: str, response: Optional[Dict[str, Any]] = No
 def clear_chat() -> None:
     """Clear conversation history."""
     st.session_state.messages = []
+

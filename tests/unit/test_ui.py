@@ -65,3 +65,4 @@ class TestChatInterface:
     def test_initialization(self):
         ci = ChatInterface()
         assert ci.root.exists()
+

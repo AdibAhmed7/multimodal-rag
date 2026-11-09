@@ -74,3 +74,4 @@ class DisplayManager:
                     page_num = s.get("page_number", "N/A")
                     s_id = s.get("id", s.get("image_id", ""))
                     st.markdown(f"- **[{s_type}]** Page {page_num} — `{s_id}`")
+
