@@ -154,31 +154,68 @@ class QwenModel:
             elif isinstance(content, str):
                 user_text += content + "\n"
 
-        # Extract page sections from prompt evidence
-        page_pattern = re.compile(r"--- Document:\s*(\S+)\s*\|\s*Page:\s*(\d+)\s*---(.*?)(?=--- Document:|\Z)", re.DOTALL)
+        # Extract user query if available
+        query_match = re.search(r"User Question:\s*(.*?)(?=\n|Supplied PDF Evidence:)", user_text)
+        query = query_match.group(1).strip() if query_match else ""
+
+        # Extract page sections from prompt evidence (supports spaces in document ID)
+        page_pattern = re.compile(
+            r"--- Document:\s*(.+?)\s*\|\s*Page:\s*(\d+)\s*---(.*?)(?=--- Document:|\Z)",
+            re.DOTALL,
+        )
         matches = page_pattern.findall(user_text)
 
-        evidence_paragraphs = []
+        evidence_items = []
         pages_cited = set()
 
         for doc_id, page_num, section_text in matches:
             pages_cited.add(page_num)
-            # Find chunks
-            chunks = re.findall(r"\[Chunk\s+[^\]]+\]:\s*([^\n]+)", section_text)
+            # Find multiline chunks
+            chunks = re.findall(
+                r"\[Chunk\s+[^\]]+\]:\s*([\s\S]+?)(?=\n\s*\[(?:Chunk|Image)|---|\Z)",
+                section_text,
+            )
             for c in chunks:
-                if c.strip():
-                    evidence_paragraphs.append(f"{c.strip()} [Page {page_num}]")
+                cleaned = c.strip()
+                if cleaned:
+                    evidence_items.append({
+                        "type": "text",
+                        "page": page_num,
+                        "text": cleaned,
+                    })
 
             # Find image descriptors
-            img_descs = re.findall(r"\[Image\s+([^\]]+)\](?:\s+Description:\s*([^\n]+)|\s+Context:\s*([^\n]+))?", section_text)
+            img_descs = re.findall(
+                r"\[Image\s+([^\]]+)\](?:\s+Description:\s*([^\n]+)|\s+Context:\s*([^\n]+))?",
+                section_text,
+            )
             for img_id, desc, ctx in img_descs:
                 detail = desc or ctx or "visual diagram"
-                evidence_paragraphs.append(
-                    f"The document includes figure ({img_id}) illustrating {detail.strip()} [Page {page_num}]."
-                )
+                evidence_items.append({
+                    "type": "image",
+                    "page": page_num,
+                    "id": img_id,
+                    "text": f"Includes figure ({img_id}) illustrating {detail.strip()} [Page {page_num}].",
+                })
 
-        if not evidence_paragraphs:
+        if not evidence_items:
             return "The provided document does not contain enough information to answer this question reliably."
 
-        answer_body = "\n\n".join(evidence_paragraphs[:4])
+        formatted_sections = []
+        for item in evidence_items:
+            if item["type"] == "text":
+                text = item["text"]
+                page = item["page"]
+                lines = [line.strip() for line in text.split("\n") if line.strip()]
+                if len(lines) > 1 and len(lines[0]) < 45 and not lines[0].endswith("."):
+                    title = lines[0]
+                    body = " ".join(lines[1:])
+                    formatted_sections.append(f"**{title} [Page {page}]**\n{body}")
+                else:
+                    body = " ".join(lines)
+                    formatted_sections.append(f"{body} [Page {page}]")
+            elif item["type"] == "image":
+                formatted_sections.append(item["text"])
+
+        answer_body = "\n\n".join(formatted_sections[:4])
         return answer_body

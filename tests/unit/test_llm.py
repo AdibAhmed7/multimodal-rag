@@ -137,3 +137,31 @@ def test_qwen_fallback_generation():
     assert "[Page 2]" in answer
     assert "Self-attention" in answer
 
+
+def test_qwen_fallback_generation_with_spaces_in_document_id():
+    model = QwenModel.__new__(QwenModel)
+    model.is_fallback = True
+
+    messages = [
+        {
+            "role": "user",
+            "content": (
+                "User Question: What is the difference between routing and forwarding?\n"
+                "Supplied PDF Evidence:\n"
+                "--- Document: network layer | Page: 6 ---\n"
+                "[Chunk network layer_p006_c000]: Routing\n"
+                "The network layer figures out the best path for data to travel.\n\n"
+                "--- Document: network layer | Page: 7 ---\n"
+                "[Chunk network layer_p007_c000]: Forwarding\n"
+                "Forwarding is what each router does when data actually arrives at its doorstep.\n"
+            ),
+        }
+    ]
+
+    answer = model._fallback_generate(messages)
+    assert "[Page 6]" in answer
+    assert "[Page 7]" in answer
+    assert "Routing" in answer
+    assert "Forwarding" in answer
+
+
