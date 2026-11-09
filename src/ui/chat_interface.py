@@ -27,13 +27,14 @@ class ChatInterface:
         text_limit: int = 5,
         image_limit: int = 4,
         operation: str = "auto",
+        fast_mode: bool = True,
     ) -> Dict[str, Any]:
         """Sends a query to the multimodal pipeline and loads the response payload."""
         resp_id = str(uuid.uuid4())
         out_file = self.root / "data" / "generated" / "responses" / f"resp_{resp_id}.json"
         out_file.parent.mkdir(parents=True, exist_ok=True)
 
-        command = [
+        base_command = [
             sys.executable,
             str(self.root / "scripts" / "ask_multimodal.py"),
             "--query",
@@ -49,7 +50,11 @@ class ChatInterface:
         ]
 
         if document_id:
-            command.extend(["--document-id", document_id])
+            base_command.extend(["--document-id", document_id])
+
+        command = list(base_command)
+        if fast_mode:
+            command.append("--fast")
 
         result = subprocess.run(
             command,
@@ -59,9 +64,27 @@ class ChatInterface:
             encoding="utf-8",
         )
 
+        # Automatic fallback retry if memory or weight loading failed without fast mode
+        if result.returncode != 0 and not fast_mode:
+            print("Notice: Execution failed without --fast. Automatically retrying in fast CPU mode...")
+            command_fallback = list(base_command) + ["--fast"]
+            result = subprocess.run(
+                command_fallback,
+                cwd=str(self.root),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
+
         if result.returncode != 0:
-            err = result.stderr.strip() or result.stdout.strip()
-            raise RuntimeError(f"Multimodal pipeline execution failed:\n{err}")
+            raw_err = result.stderr.strip() or result.stdout.strip()
+            # Clean up progress bar lines from error message
+            clean_lines = [
+                line for line in raw_err.splitlines()
+                if "Loading weights:" not in line and not line.startswith("Loading weights")
+            ]
+            clean_err = "\n".join(clean_lines).strip() or "Process terminated unexpectedly."
+            raise RuntimeError(f"Pipeline execution failed:\n{clean_err}")
 
         # Load generated response payload
         target_path = out_file

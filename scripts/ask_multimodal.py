@@ -95,6 +95,11 @@ def main():
         help="Random seed for image generation (default: 42)",
     )
     parser.add_argument(
+        "--fast",
+        action="store_true",
+        help="Use fast evidence-grounded QA synthesis (recommended for CPU execution)",
+    )
+    parser.add_argument(
         "--database",
         default="data/processed/qdrant",
         help="Path to local Qdrant database",
@@ -226,7 +231,7 @@ def main():
         )
 
         print("\n[QA Engine] Generating evidence-grounded answer...")
-        answer_gen = AnswerGenerator(max_images=args.max_images)
+        answer_gen = AnswerGenerator(max_images=args.max_images, fast_mode=args.fast)
         try:
             raw_qa = answer_gen.generate(query=args.query, context=context)
             answer = raw_qa.get("answer")

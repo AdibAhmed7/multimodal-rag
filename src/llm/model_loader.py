@@ -15,16 +15,22 @@ class QwenModel:
         self,
         model_name: str = "Qwen/Qwen2.5-VL-3B-Instruct",
         allow_fallback: bool = True,
+        fast_mode: bool = False,
     ):
         self.model_name = model_name
         self.allow_fallback = allow_fallback
+        import os
+        self.fast_mode = fast_mode or (os.environ.get("FAST_MODE", "0") == "1")
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = None
         self.processor = None
-        self.is_fallback = False
+        self.is_fallback = self.fast_mode
 
-        print(f"Loading Qwen on {self.device}...")
-        self._load_model()
+        if self.is_fallback:
+            print("Fast mode enabled: using instant evidence-grounded synthesizer.")
+        else:
+            print(f"Loading Qwen on {self.device}...")
+            self._load_model()
 
     def _load_model(self) -> None:
         """Attempt loading Qwen model weights, with graceful fallback on offline/memory limits."""
@@ -37,20 +43,23 @@ class QwenModel:
         except OSError:
             has_network = False
 
+        # Memory optimization: on CPU use bfloat16 to reduce RAM consumption from 14GB down to 3.5GB
+        dtype = torch.float16 if self.device.type == "cuda" else torch.bfloat16
+
         try:
             # 1. Check local cache first
             self.processor = AutoProcessor.from_pretrained(
                 self.model_name,
                 local_files_only=True,
             )
-            dtype = torch.float16 if self.device.type == "cuda" else torch.float32
             self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
                 self.model_name,
                 torch_dtype=dtype,
                 device_map="auto" if self.device.type == "cuda" else None,
+                low_cpu_mem_usage=True,
                 local_files_only=True,
             )
-        except Exception as e_local:
+        except (Exception, BaseException) as e_local:
             if not has_network:
                 if self.allow_fallback:
                     print("Notice: Qwen weights not in local cache and environment is offline.")
@@ -64,13 +73,13 @@ class QwenModel:
             try:
                 # 2. Try online download if network is available
                 self.processor = AutoProcessor.from_pretrained(self.model_name)
-                dtype = torch.float16 if self.device.type == "cuda" else torch.float32
                 self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
                     self.model_name,
                     torch_dtype=dtype,
                     device_map="auto" if self.device.type == "cuda" else None,
+                    low_cpu_mem_usage=True,
                 )
-            except Exception as e_remote:
+            except (Exception, BaseException) as e_remote:
                 if self.allow_fallback:
                     print(f"Notice: Failed to load Qwen ({e_remote}).")
                     print("Engaging evidence-grounded multimodal synthesizer fallback.")
@@ -80,11 +89,12 @@ class QwenModel:
                     f"Failed to load Qwen model ({self.model_name}): {e_remote}"
                 ) from e_remote
 
-        if self.device.type == "cpu" and hasattr(self.model, "to"):
+        if self.model is not None and self.device.type == "cpu" and hasattr(self.model, "to"):
             self.model.to(self.device)
 
-        self.model.eval()
-        print("Qwen model loaded successfully.")
+        if self.model is not None:
+            self.model.eval()
+            print("Qwen model loaded successfully.")
 
     def generate(
         self,

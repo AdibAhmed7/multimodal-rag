@@ -40,6 +40,9 @@ models/*
 htmlcov/
 
 # Processed and generated runtime data
+data/raw/pdfs/*
+!data/raw/pdfs/example.pdf
+!data/raw/pdfs/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
 data/generated/*

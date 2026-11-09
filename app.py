@@ -83,8 +83,13 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("3. Pipeline Parameters")
-    text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=5)
-    image_limit = st.slider("Max Retrieved Images", min_value=1, max_value=8, value=4)
+    fast_mode = st.toggle(
+        "⚡ Fast CPU Mode (Instant Answers)",
+        value=True,
+        help="Generates evidence-grounded answers with citations instantly without exhausting CPU RAM.",
+    )
+    text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=3)
+    image_limit = st.slider("Max Retrieved Images", min_value=1, max_value=8, value=2)
 
     operation_mode = st.radio(
         "Execution Mode",
@@ -160,6 +165,7 @@ if prompt := st.chat_input("Ask a question about the PDF or request a technical 
                         text_limit=text_limit,
                         image_limit=image_limit,
                         operation=operation_mode,
+                        fast_mode=fast_mode,
                     )
                     display_manager.display_response(response_payload)
                     add_message(

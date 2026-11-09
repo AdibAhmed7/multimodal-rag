@@ -12,16 +12,18 @@ class AnswerGenerator:
         model: Optional[QwenModel] = None,
         max_images: int = 4,
         max_new_tokens: int = 700,
+        fast_mode: bool = False,
     ):
         self.model = model
         self.prompt_builder = PromptBuilder()
         self.max_images = max_images
         self.max_new_tokens = max_new_tokens
+        self.fast_mode = fast_mode
 
     def _get_model(self) -> QwenModel:
         """Lazily initialize the model if not injected."""
         if self.model is None:
-            self.model = QwenModel()
+            self.model = QwenModel(fast_mode=self.fast_mode)
         return self.model
 
     def generate(
