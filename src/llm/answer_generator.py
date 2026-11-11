@@ -7,7 +7,7 @@ from src.llm.prompt_builder import PromptBuilder
 
 
 class AnswerGenerator:
-    """Orchestrates prompt creation, image attachment, and multimodal generation (Cloud or Local)."""
+    """Orchestrates prompt creation, image attachment, and cloud multimodal generation."""
 
     def __init__(
         self,
@@ -15,47 +15,38 @@ class AnswerGenerator:
         max_images: int = 4,
         max_new_tokens: int = 700,
         fast_mode: bool = False,
-        online_mode: bool = False,
+        online_mode: bool = True,
         cloud_provider: str = "gemini",
         api_key: Optional[str] = None,
+        **kwargs: Any,
     ):
         self.model = model
         self.prompt_builder = PromptBuilder()
         self.max_images = max_images
         self.max_new_tokens = max_new_tokens
-        self.fast_mode = fast_mode
         self.online_mode = online_mode
         self.cloud_provider = cloud_provider
         self.api_key = api_key
 
-        # Automatically enable online mode if an API key is discovered
-        if not self.online_mode and (self.api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("OPENAI_API_KEY")):
-            self.online_mode = True
-
         self.cloud_client: Optional[CloudMultimodalClient] = None
-        if self.online_mode:
+        if self.model is None:
             try:
                 self.cloud_client = CloudMultimodalClient(
                     provider=self.cloud_provider,
                     api_key=self.api_key,
                 )
             except Exception as e:
-                print(f"Notice: Cloud client initialization deferred: {e}")
-                self.online_mode = False
-
-    def _get_model(self) -> QwenModel:
-        """Lazily initialize the local model if not injected."""
-        if self.model is None:
-            use_fast = self.fast_mode or self.online_mode
-            self.model = QwenModel(fast_mode=use_fast)
-        return self.model
+                raise RuntimeError(
+                    f"Failed to initialize cloud multimodal provider '{self.cloud_provider}': {e}. "
+                    f"Please ensure {self.cloud_provider.upper()}_API_KEY is set in your .env file."
+                ) from e
 
     def generate(
         self,
         query: str,
         context: Dict[str, Any],
     ) -> Dict[str, Any]:
-        """Send prompt evidence and attached raster figures to Qwen."""
+        """Send prompt evidence and attached raster figures to Cloud Multimodal Provider."""
         pages = context.get("pages", [])
         user_prompt = self.prompt_builder.build(query=query, pages=pages)
 
@@ -126,51 +117,45 @@ class AnswerGenerator:
             "text": user_prompt,
         })
 
-        # 1. Cloud-accelerated generation (Gemini / OpenAI)
-        if self.online_mode and self.cloud_client:
-            try:
-                img_paths = [img["image_path"] for img in attached_images if img.get("image_path")]
-                print(f"[QA Engine] Dispatching to online cloud provider: '{self.cloud_provider.upper()}'...")
-                answer = self.cloud_client.generate(
-                    system_prompt=self.prompt_builder.SYSTEM_PROMPT,
-                    user_text=user_prompt,
-                    image_paths=img_paths,
-                    max_tokens=self.max_new_tokens,
-                )
-                return {
-                    "query": query,
-                    "answer": answer,
-                    "sources": sources,
-                    "attached_images": attached_images,
-                    "provider": f"online_{self.cloud_provider}",
-                }
-            except Exception as e:
-                print(f"Notice: Online cloud generation failed ({e}). Falling back to local synthesizer...")
+        # Injected mock model (for unit testing)
+        if self.model is not None:
+            messages = [
+                {"role": "system", "content": self.prompt_builder.SYSTEM_PROMPT},
+                {"role": "user", "content": content},
+            ]
+            answer = self.model.generate(
+                messages=messages,
+                max_new_tokens=self.max_new_tokens,
+                do_sample=False,
+            )
+            return {
+                "query": query,
+                "answer": answer,
+                "sources": sources,
+                "attached_images": attached_images,
+                "provider": "mock",
+            }
 
-        # 2. Local generation (Qwen2.5-VL / Fast CPU Synthesizer)
-        messages = [
-            {
-                "role": "system",
-                "content": self.prompt_builder.SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": content,
-            },
-        ]
+        # Online Cloud Generation (Gemini / OpenAI)
+        if not self.cloud_client:
+            raise RuntimeError(
+                f"Cloud client for '{self.cloud_provider}' is not initialized. "
+                f"Please ensure {self.cloud_provider.upper()}_API_KEY is defined in your .env file."
+            )
 
-        model = self._get_model()
-        answer = model.generate(
-            messages=messages,
-            max_new_tokens=self.max_new_tokens,
-            do_sample=False,
+        img_paths = [img["image_path"] for img in attached_images if img.get("image_path")]
+        print(f"[QA Engine] Dispatching to online cloud provider: '{self.cloud_provider.upper()}'...")
+        answer = self.cloud_client.generate(
+            system_prompt=self.prompt_builder.SYSTEM_PROMPT,
+            user_text=user_prompt,
+            image_paths=img_paths,
+            max_tokens=self.max_new_tokens,
         )
-
         return {
             "query": query,
             "answer": answer,
             "sources": sources,
             "attached_images": attached_images,
-            "provider": "local_offline",
+            "provider": f"online_{self.cloud_provider}",
         }
 

@@ -106,7 +106,8 @@ def main():
     parser.add_argument(
         "--online",
         action="store_true",
-        help="Use cloud-powered multimodal API (Google Gemini or OpenAI)",
+        default=True,
+        help="Use cloud-powered multimodal API (Google Gemini or OpenAI, default: True)",
     )
     parser.add_argument(
         "--provider",
@@ -253,8 +254,7 @@ def main():
         print("\n[QA Engine] Generating evidence-grounded answer...")
         answer_gen = AnswerGenerator(
             max_images=args.max_images,
-            fast_mode=args.fast,
-            online_mode=args.online,
+            online_mode=True,
             cloud_provider=args.provider,
             api_key=args.api_key,
         )

@@ -87,44 +87,25 @@ with st.sidebar:
         st.session_state.active_document = None
 
     st.markdown("---")
-    st.subheader("3. Model Engine (Online / Offline)")
-    backend_mode = st.radio(
-        "Execution Engine",
-        options=["online", "offline"],
-        format_func=lambda x: {
-            "online": "🌐 Online Cloud (Gemini / OpenAI)",
-            "offline": "💻 Offline Local (Fast CPU Synthesizer)",
-        }[x],
+    st.subheader("3. Cloud Model Engine")
+    cloud_provider = st.selectbox(
+        "Provider",
+        options=["gemini", "openai"],
+        format_func=lambda x: "✨ Google Gemini (Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
         index=0,
-        help="Online mode uses fast cloud vision AI with zero local RAM load. Offline mode runs entirely on your local machine.",
+        help="Multimodal inference is processed via official cloud endpoints using your .env credentials.",
     )
+    env_key_name = f"{cloud_provider.upper()}_API_KEY"
+    has_key = bool(os.environ.get(env_key_name))
 
-    online_mode = (backend_mode == "online")
-    cloud_provider = "gemini"
-
-    if online_mode:
-        cloud_provider = st.selectbox(
-            "Cloud Provider",
-            options=["gemini", "openai"],
-            format_func=lambda x: "✨ Google Gemini (Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
-            index=0,
-        )
-        env_key_name = f"{cloud_provider.upper()}_API_KEY"
-        has_key = bool(os.environ.get(env_key_name))
-
-        if has_key:
-            st.success(f"🔐 `{env_key_name}` active from `.env`")
-        else:
-            st.warning(f"⚠️ `{env_key_name}` missing in `.env`")
-            st.caption(f"Add `{env_key_name}=your_key_here` into `.env` to enable online generation.")
+    if has_key:
+        st.success(f"🔐 `{env_key_name}` active from `.env`")
+    else:
+        st.error(f"❌ `{env_key_name}` missing in `.env`")
+        st.caption(f"Add `{env_key_name}=your_key_here` into `.env` to execute queries.")
 
     st.markdown("---")
     st.subheader("4. Pipeline Parameters")
-    fast_mode = st.toggle(
-        "⚡ Fast CPU Fallback",
-        value=True,
-        help="Enables fast evidence-grounded fallback if cloud requests fail or when running offline.",
-    )
     text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=5)
     image_limit = st.slider("Max Retrieved Images", min_value=1, max_value=8, value=2)
 
@@ -151,7 +132,7 @@ with st.sidebar:
 # -----------------------------------------------------------------------------
 st.title("🌌 Multimodal RAG Assistant")
 st.markdown(
-    "Query your documents with **BGE-M3**, **SigLIP 2**, and **Qwen2.5-VL**, "
+    "Query your documents with **BGE-M3**, **SigLIP 2**, and **Google Gemini / OpenAI**, "
     "or synthesize new illustrations with **Stable Diffusion Turbo**."
 )
 st.markdown("---")
@@ -202,10 +183,7 @@ if prompt := st.chat_input("Ask a question about the PDF or request a technical 
                         text_limit=text_limit,
                         image_limit=image_limit,
                         operation=operation_mode,
-                        fast_mode=fast_mode,
-                        online_mode=online_mode,
                         cloud_provider=cloud_provider,
-                        api_key=None,  # Automatically loaded from .env
                     )
                     display_manager.display_response(response_payload)
                     add_message(

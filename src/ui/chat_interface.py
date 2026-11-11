@@ -27,17 +27,16 @@ class ChatInterface:
         text_limit: int = 5,
         image_limit: int = 4,
         operation: str = "auto",
-        fast_mode: bool = True,
-        online_mode: bool = False,
         cloud_provider: str = "gemini",
         api_key: Optional[str] = None,
+        **kwargs: Any,
     ) -> Dict[str, Any]:
         """Sends a query to the multimodal pipeline and loads the response payload."""
         resp_id = str(uuid.uuid4())
         out_file = self.root / "data" / "generated" / "responses" / f"resp_{resp_id}.json"
         out_file.parent.mkdir(parents=True, exist_ok=True)
 
-        base_command = [
+        command = [
             sys.executable,
             str(self.root / "scripts" / "ask_multimodal.py"),
             "--query",
@@ -50,19 +49,16 @@ class ChatInterface:
             str(image_limit),
             "--operation",
             operation,
+            "--online",
+            "--provider",
+            cloud_provider,
         ]
 
         if document_id:
-            base_command.extend(["--document-id", document_id])
+            command.extend(["--document-id", document_id])
 
-        if online_mode:
-            base_command.extend(["--online", "--provider", cloud_provider])
-            if api_key:
-                base_command.extend(["--api-key", api_key])
-
-        command = list(base_command)
-        if fast_mode:
-            command.append("--fast")
+        if api_key:
+            command.extend(["--api-key", api_key])
 
         result = subprocess.run(
             command,
@@ -71,18 +67,6 @@ class ChatInterface:
             text=True,
             encoding="utf-8",
         )
-
-        # Automatic fallback retry if memory or weight loading failed without fast mode
-        if result.returncode != 0 and not fast_mode:
-            print("Notice: Execution failed without --fast. Automatically retrying in fast CPU mode...")
-            command_fallback = list(base_command) + ["--fast"]
-            result = subprocess.run(
-                command_fallback,
-                cwd=str(self.root),
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-            )
 
         if result.returncode != 0:
             raw_err = result.stderr.strip() or result.stdout.strip()
