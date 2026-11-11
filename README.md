@@ -254,7 +254,9 @@ pip install -r requirements.txt
 ### 4. Configure Environment Variables
 ```bash
 cp .env.example .env
-# Edit .env with your favorite editor
+# Edit .env and supply your Cloud API keys if using Online mode:
+# GEMINI_API_KEY=your_gemini_api_key
+# OPENAI_API_KEY=your_openai_api_key
 ```
 
 ---
@@ -373,7 +375,17 @@ Launch the interactive visual web interface to upload PDFs, search, query, and v
 ```bash
 python -m streamlit run app.py
 ```
-Then open `http://localhost:8501` in your browser.
+Then open `http://localhost:8501` in your browser. The sidebar allows one-click switching between **Online Cloud (Gemini / OpenAI)** and **Offline Local (Fast CPU Synthesizer)**, reading API keys directly from `.env`.
+
+### 13. Online Cloud Multimodal Inference (Gemini & OpenAI)
+Execute queries with cloud-accelerated multimodal models without needing local GPU VRAM:
+```bash
+# Query with Google Gemini (automatically reads GEMINI_API_KEY from .env)
+python scripts/ask_multimodal.py --online --provider gemini --query "What is the difference between routing and forwarding?"
+
+# Query with OpenAI (automatically reads OPENAI_API_KEY from .env)
+python scripts/ask_multimodal.py --online --provider openai --query "Explain the architecture from the diagram"
+```
 
 ---
 
