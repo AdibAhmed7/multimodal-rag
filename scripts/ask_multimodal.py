@@ -59,9 +59,9 @@ def main():
     )
     parser.add_argument(
         "--operation",
-        choices=["auto", "qa", "retrieve", "generate"],
+        choices=["auto", "qa", "retrieve", "generate", "diagram"],
         default="auto",
-        help="Force one of the 3 core operations: 'qa', 'retrieve', 'generate', or 'auto' (default)",
+        help="Force operation: 'qa', 'retrieve', 'generate', 'diagram', or 'auto' (default)",
     )
     parser.add_argument(
         "--document-id",
@@ -162,6 +162,15 @@ def main():
             "intent": "generate_image",
             "retrieve_pdf_images": False,
             "generate_new_image": True,
+            "generate_diagram": False,
+            "answer_question": False,
+        }
+    elif args.operation == "diagram":
+        routing = {
+            "intent": "generate_diagram",
+            "retrieve_pdf_images": False,
+            "generate_new_image": False,
+            "generate_diagram": True,
             "answer_question": False,
         }
     else:
@@ -171,9 +180,10 @@ def main():
     intent = routing["intent"]
     print(f"[Router] Intent resolved: '{intent}' (operation mode: {args.operation})")
     print(
-        f"         retrieve_pdf_images={routing['retrieve_pdf_images']} | "
-        f"generate_new_image={routing['generate_new_image']} | "
-        f"answer_question={routing['answer_question']}"
+        f"         retrieve_pdf_images={routing.get('retrieve_pdf_images', False)} | "
+        f"generate_new_image={routing.get('generate_new_image', False)} | "
+        f"generate_diagram={routing.get('generate_diagram', False)} | "
+        f"answer_question={routing.get('answer_question', False)}"
     )
 
     generated_images: List[Dict[str, Any]] = []
@@ -204,7 +214,7 @@ def main():
 
     # Step 3: PDF Retrieval (if requested)
     retrieval_results = None
-    if routing["retrieve_pdf_images"] or routing["answer_question"]:
+    if routing["retrieve_pdf_images"] or routing.get("answer_question", False) or routing.get("generate_diagram", False):
         print("\n[Retrieval] Searching Qdrant database...")
         manager = QdrantManager(database_path=str(db_path))
         try:
@@ -234,15 +244,16 @@ def main():
                     "document_id": img.get("document_id"),
                 })
 
-        # Memory management: unload retrieval pipeline before loading Qwen
+        # Memory management: unload retrieval pipeline before loading generation models
         del pipeline
         del manager
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-    # Step 4: Context Building & Answer Generation (if requested)
-    if routing["answer_question"] and retrieval_results is not None:
+    # Step 4: Context Building, QA & Diagram Synthesis
+    context = None
+    if (routing.get("answer_question", False) or routing.get("generate_diagram", False)) and retrieval_results is not None:
         print("\n[Context] Organizing evidence from PDF...")
         context_builder = ContextBuilder(
             enable_image_descriptions=True,
@@ -253,6 +264,8 @@ def main():
             retrieval_results=retrieval_results,
         )
 
+    # 4a: Question Answering
+    if routing.get("answer_question", False) and context is not None:
         print("\n[QA Engine] Generating evidence-grounded answer...")
         answer_gen = AnswerGenerator(
             max_images=args.max_images,
@@ -269,6 +282,61 @@ def main():
             gc.collect()
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
+
+    # 4b: Diagram Synthesis (Mermaid.js)
+    diagram_payload = None
+    if routing.get("generate_diagram", False) and context is not None:
+        print("\n[Diagram Generator] Synthesizing grounded Mermaid.js diagram...")
+        from src.diagram_generator.diagram_service import generate_diagram
+        from src.llm.cloud_client import CloudMultimodalClient
+
+        q_lower = args.query.lower()
+        if "flowchart" in q_lower:
+            diag_type = "flowchart"
+        elif "mindmap" in q_lower or "mind map" in q_lower:
+            diag_type = "mindmap"
+        elif "sequence diagram" in q_lower or "sequence" in q_lower:
+            diag_type = "sequenceDiagram"
+        elif "class diagram" in q_lower or "class" in q_lower:
+            diag_type = "classDiagram"
+        elif "er diagram" in q_lower or "erd" in q_lower:
+            diag_type = "erDiagram"
+        elif "state diagram" in q_lower:
+            diag_type = "stateDiagram"
+        elif "timeline" in q_lower:
+            diag_type = "timeline"
+        elif "architecture" in q_lower:
+            diag_type = "architecture"
+        else:
+            diag_type = "auto"
+
+        diag_direction = "LR" if any(w in q_lower for w in ["left to right", "horizontal", " lr"]) else "TD"
+
+        llm = CloudMultimodalClient(provider=args.provider, api_key=args.api_key)
+        diag_res = generate_diagram(
+            user_query=args.query,
+            retrieved_context=context,
+            diagram_type=diag_type,
+            direction=diag_direction,
+            llm=llm,
+        )
+
+        if diag_res.get("success"):
+            diagram_payload = {
+                "diagram_type": diag_res.get("diagram_type", diag_type),
+                "mermaid_code": diag_res.get("mermaid_code", ""),
+                "repair_attempts": diag_res.get("repair_attempts", 0),
+            }
+            if not sources:
+                sources = diag_res.get("sources", [])
+            if not answer:
+                answer = f"Here is the technical diagram synthesized from **{args.document_id or 'the document'}**:"
+        else:
+            err_msg = diag_res.get("error") or "Failed to generate diagram from document context."
+            print(f"[Diagram Generator] Notice: {err_msg}")
+            if not answer:
+                answer = f"⚠️ Notice: {err_msg}"
+
     elif intent == "retrieve_pdf_images":
         # Construct source list from retrieved images
         for r_img in retrieved_images:
@@ -289,6 +357,7 @@ def main():
         answer=answer,
         retrieved_images=retrieved_images,
         generated_images=generated_images,
+        diagram=diagram_payload,
         sources=sources,
     )
 

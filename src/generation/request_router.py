@@ -27,9 +27,36 @@ class RequestRouter:
         "generate a picture",
         "create a picture",
         "generate a new",
-        "generate a diagram",
-        "create a new diagram",
         "generate an illustration",
+    ]
+
+    DIAGRAM_KEYWORDS = [
+        "flowchart",
+        "mindmap",
+        "mind map",
+        "sequence diagram",
+        "class diagram",
+        "er diagram",
+        "erd",
+        "state diagram",
+        "timeline",
+        "architecture diagram",
+        "block diagram",
+        "process diagram",
+        "generate a diagram",
+        "create a diagram",
+        "draw a diagram",
+        "draw diagram",
+        "make a diagram",
+        "generate diagram",
+        "create diagram",
+        "draw a flowchart",
+        "create a flowchart",
+        "generate a flowchart",
+        "draw a sequence diagram",
+        "draw a mind map",
+        "draw a mindmap",
+        "mermaid",
     ]
 
     RETRIEVE_KEYWORDS = [
@@ -104,10 +131,25 @@ class RequestRouter:
                     "from",
                 ]
             )
+            and not any(d_verb in normalized for d_verb in ["draw", "create", "generate", "make"])
         )
+        wants_diagram = any(keyword in normalized for keyword in self.DIAGRAM_KEYWORDS) and not wants_retrieval
+        wants_generation = any(keyword in normalized for keyword in self.GENERATE_KEYWORDS) and not wants_diagram
         is_explanation = any(keyword in normalized for keyword in self.EXPLAIN_KEYWORDS)
 
-        if wants_generation and wants_retrieval:
+        generate_diagram = False
+
+        if wants_diagram:
+            generate_diagram = True
+            retrieve_pdf_images = False
+            generate_new_image = False
+            if is_explanation:
+                intent = "answer_and_diagram"
+                answer_question = True
+            else:
+                intent = "generate_diagram"
+                answer_question = False
+        elif wants_generation and wants_retrieval:
             intent = "answer_and_generate"
             retrieve_pdf_images = True
             generate_new_image = True
@@ -145,6 +187,7 @@ class RequestRouter:
             "intent": intent,
             "retrieve_pdf_images": retrieve_pdf_images,
             "generate_new_image": generate_new_image,
+            "generate_diagram": generate_diagram,
             "answer_question": answer_question,
         }
 

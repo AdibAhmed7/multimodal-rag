@@ -18,3 +18,18 @@ def test_image_retrieval():
     result = router.route("Show me the diagram from the PDF")
     assert result["intent"] == "retrieve_pdf_images"
 
+
+def test_diagram_flowchart_generation():
+    router = RequestRouter()
+    result = router.route("Draw a flowchart of routing vs forwarding")
+    assert result["intent"] in ["generate_diagram", "answer_and_diagram"]
+    assert result["generate_diagram"] is True
+    assert result["generate_new_image"] is False
+
+
+def test_diagram_mindmap_generation():
+    router = RequestRouter()
+    result = router.route("Create a mindmap explaining cloud deployment models")
+    assert result["intent"] in ["generate_diagram", "answer_and_diagram"]
+    assert result["generate_diagram"] is True
+
