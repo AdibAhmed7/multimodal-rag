@@ -8,7 +8,11 @@ Integrates:
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 import streamlit as st
+
+# Automatically load environment variables from .env
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 # Streamlit Page Configuration
 st.set_page_config(
@@ -97,28 +101,22 @@ with st.sidebar:
 
     online_mode = (backend_mode == "online")
     cloud_provider = "gemini"
-    api_key_input = ""
 
     if online_mode:
         cloud_provider = st.selectbox(
             "Cloud Provider",
             options=["gemini", "openai"],
-            format_func=lambda x: "✨ Google Gemini (Recommended - Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
+            format_func=lambda x: "✨ Google Gemini (Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
             index=0,
         )
         env_key_name = f"{cloud_provider.upper()}_API_KEY"
-        default_key = os.environ.get(env_key_name, "")
-        api_key_input = st.text_input(
-            f"{cloud_provider.upper()} API Key",
-            value=default_key,
-            type="password",
-            placeholder="Paste your API key here...",
-            help="Your API key is kept secure for this session and sent directly to the official provider endpoint.",
-        )
-        if cloud_provider == "gemini" and not api_key_input:
-            st.caption("👉 [Get a free Google Gemini API Key here](https://aistudio.google.com/app/apikey)")
-        elif cloud_provider == "openai" and not api_key_input:
-            st.caption("👉 [Get an OpenAI API Key here](https://platform.openai.com/api-keys)")
+        has_key = bool(os.environ.get(env_key_name))
+
+        if has_key:
+            st.success(f"🔐 `{env_key_name}` active from `.env`")
+        else:
+            st.warning(f"⚠️ `{env_key_name}` missing in `.env`")
+            st.caption(f"Add `{env_key_name}=your_key_here` into `.env` to enable online generation.")
 
     st.markdown("---")
     st.subheader("4. Pipeline Parameters")
@@ -207,7 +205,7 @@ if prompt := st.chat_input("Ask a question about the PDF or request a technical 
                         fast_mode=fast_mode,
                         online_mode=online_mode,
                         cloud_provider=cloud_provider,
-                        api_key=api_key_input.strip() or None,
+                        api_key=None,  # Automatically loaded from .env
                     )
                     display_manager.display_response(response_payload)
                     add_message(
