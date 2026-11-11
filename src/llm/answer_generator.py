@@ -46,7 +46,8 @@ class AnswerGenerator:
     def _get_model(self) -> QwenModel:
         """Lazily initialize the local model if not injected."""
         if self.model is None:
-            self.model = QwenModel(fast_mode=self.fast_mode)
+            use_fast = self.fast_mode or self.online_mode
+            self.model = QwenModel(fast_mode=use_fast)
         return self.model
 
     def generate(

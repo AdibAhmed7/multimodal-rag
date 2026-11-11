@@ -7,7 +7,7 @@ from src.llm.answer_generator import AnswerGenerator
 def test_cloud_client_initialization():
     client_gemini = CloudMultimodalClient(provider="gemini", api_key="test_key_gemini")
     assert client_gemini.provider == "gemini"
-    assert client_gemini.model_name == "gemini-2.5-flash"
+    assert client_gemini.model_name == "gemini-3.5-flash"
     assert client_gemini.api_key == "test_key_gemini"
 
     client_openai = CloudMultimodalClient(provider="openai", api_key="test_key_openai")
@@ -20,9 +20,10 @@ def test_cloud_client_initialization():
 
 
 def test_cloud_client_missing_key_raises():
-    client = CloudMultimodalClient(provider="gemini", api_key="")
-    with pytest.raises(ValueError, match="Cloud API key missing"):
-        client.generate(system_prompt="sys", user_text="hello")
+    with patch.dict("os.environ", {}, clear=True):
+        client = CloudMultimodalClient(provider="gemini", api_key="")
+        with pytest.raises(ValueError, match="Cloud API key missing"):
+            client.generate(system_prompt="sys", user_text="hello")
 
 
 def test_cloud_client_mock_gemini():
@@ -77,3 +78,4 @@ def test_answer_generator_online_mode():
     )
     assert answer_gen.online_mode is True
     assert answer_gen.cloud_client is not None
+

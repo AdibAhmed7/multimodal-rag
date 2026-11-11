@@ -9,6 +9,13 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 from PIL import Image
+from dotenv import load_dotenv
+
+# Automatically load environment variables from current directory or repo root
+load_dotenv()
+repo_root = Path(__file__).resolve().parent.parent.parent
+if (repo_root / ".env").exists():
+    load_dotenv(repo_root / ".env")
 
 
 class CloudMultimodalClient:
@@ -29,7 +36,7 @@ class CloudMultimodalClient:
         )
 
         if self.provider == "gemini":
-            self.model_name = model_name or "gemini-2.5-flash"
+            self.model_name = model_name or "gemini-3.5-flash"
         elif self.provider in ("openai", "gpt"):
             self.provider = "openai"
             self.model_name = model_name or "gpt-4o-mini"
@@ -114,15 +121,28 @@ class CloudMultimodalClient:
         config = types.GenerateContentConfig(
             system_instruction=system_prompt,
             temperature=temperature,
-            max_output_tokens=max_tokens,
+            max_output_tokens=max(max_tokens, 2048),
         )
 
-        response = client.models.generate_content(
-            model=self.model_name,
-            contents=contents,
-            config=config,
-        )
-        return (response.text or "").strip()
+        candidate_models = [self.model_name]
+        for fallback in ["gemini-3.5-flash", "gemini-3.5-flash-lite"]:
+            if fallback not in candidate_models:
+                candidate_models.append(fallback)
+
+        last_error = None
+        for m in candidate_models:
+            try:
+                response = client.models.generate_content(
+                    model=m,
+                    contents=contents,
+                    config=config,
+                )
+                return (response.text or "").strip()
+            except Exception as e:
+                last_error = e
+                print(f"Notice: Gemini generation with {m} returned: {e}. Trying fallback...")
+
+        raise RuntimeError(f"All candidate Gemini models failed. Last error: {last_error}")
 
     def _generate_openai(
         self,
@@ -165,3 +185,4 @@ class CloudMultimodalClient:
             temperature=temperature,
         )
         return response.choices[0].message.content.strip()
+

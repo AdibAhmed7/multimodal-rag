@@ -21,6 +21,10 @@ repo_root = Path(__file__).resolve().parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
+from dotenv import load_dotenv
+load_dotenv(repo_root / ".env")
+load_dotenv()
+
 from src.context.context_builder import ContextBuilder
 from src.generation.image_generator import ImageGenerator
 from src.generation.image_prompt_builder import ImagePromptBuilder

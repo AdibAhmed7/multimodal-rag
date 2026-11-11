@@ -127,7 +127,7 @@ with st.sidebar:
         value=True,
         help="Enables fast evidence-grounded fallback if cloud requests fail or when running offline.",
     )
-    text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=3)
+    text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=5)
     image_limit = st.slider("Max Retrieved Images", min_value=1, max_value=8, value=2)
 
     operation_mode = st.radio(
