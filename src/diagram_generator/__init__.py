@@ -20,3 +20,4 @@ __all__ = [
     "build_mermaid_html",
     "get_local_mermaid_js",
 ]
+

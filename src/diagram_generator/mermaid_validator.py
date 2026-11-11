@@ -129,3 +129,4 @@ def validate_mermaid_syntax(code: str) -> Tuple[bool, Optional[str]]:
                 return False, f"Unbalanced bracket delimiters: '{open_b}' and '{close_b}'."
 
     return True, None
+

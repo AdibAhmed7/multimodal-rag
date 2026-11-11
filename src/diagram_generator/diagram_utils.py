@@ -217,3 +217,4 @@ def build_mermaid_html(
 </body>
 </html>"""
     return html_content
+

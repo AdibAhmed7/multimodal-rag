@@ -105,21 +105,33 @@ def main():
         out_path.parent.mkdir(parents=True, exist_ok=True)
         if out_path.suffix.lower() == ".json":
             import json
+            citations = []
+            for p in context.get("pages", []):
+                chunks = p.get("text_chunks", [])
+                preview_text = ""
+                if chunks:
+                    c0 = chunks[0]
+                    if isinstance(c0, dict):
+                        preview_text = c0.get("content", "")
+                    elif isinstance(c0, str):
+                        preview_text = c0
+                    else:
+                        preview_text = str(c0)
+
+                citations.append({
+                    "document_id": p.get("document_id"),
+                    "page_number": p.get("page_number"),
+                    "chunk_count": len(chunks),
+                    "preview": (preview_text[:180] + "...") if preview_text else "",
+                })
+
             payload = {
                 "success": result["success"],
                 "diagram_type": result.get("diagram_type"),
                 "mermaid_code": mermaid_code,
                 "error": result.get("error"),
-                "citations": [
-                    {
-                        "document_id": p.get("document_id"),
-                        "page_number": p.get("page_number"),
-                        "chunk_count": len(p.get("text_chunks", [])),
-                        "preview": (p.get("text_chunks", [""])[0][:180] + "...") if p.get("text_chunks") else ""
-                    }
-                    for p in context.get("pages", [])
-                ],
-                "context_text_count": len(text_chunks)
+                "citations": citations,
+                "context_text_count": len(text_chunks),
             }
             out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         elif out_path.suffix.lower() == ".html":
