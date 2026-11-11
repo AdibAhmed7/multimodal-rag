@@ -76,15 +76,15 @@ class MultimodalRetrievalPipeline:
         k: int = 60,
     ) -> Dict[str, Any]:
         """Perform multimodal search across text and image collections fused with RRF."""
-        text_results = self.search_text(
-            query,
-            limit=text_limit,
-            document_id=document_id,
+        text_results = (
+            self.search_text(query, limit=text_limit, document_id=document_id)
+            if text_limit > 0
+            else []
         )
-        image_results = self.search_images(
-            query,
-            limit=image_limit,
-            document_id=document_id,
+        image_results = (
+            self.search_images(query, limit=image_limit, document_id=document_id)
+            if image_limit > 0
+            else []
         )
         fused = reciprocal_rank_fusion([text_results, image_results], k=k)
 

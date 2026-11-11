@@ -20,7 +20,7 @@ class TestRequestRouter:
     def test_route_answer(self):
         result = self.router.route("Explain the main concept of this PDF")
         assert result["intent"] == "answer"
-        assert result["retrieve_pdf_images"] is True
+        assert result["retrieve_pdf_images"] is False
         assert result["generate_new_image"] is False
         assert result["answer_question"] is True
 

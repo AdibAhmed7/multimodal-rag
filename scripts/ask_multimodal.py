@@ -146,7 +146,7 @@ def main():
     if args.operation == "qa":
         routing = {
             "intent": "answer",
-            "retrieve_pdf_images": True,
+            "retrieve_pdf_images": False,
             "generate_new_image": False,
             "answer_question": True,
         }
@@ -209,28 +209,30 @@ def main():
         manager = QdrantManager(database_path=str(db_path))
         try:
             pipeline = MultimodalRetrievalPipeline(manager.client)
+            img_limit = args.image_limit if routing["retrieve_pdf_images"] else 0
             retrieval_results = pipeline.search_multimodal(
                 query=args.query,
                 text_limit=args.text_limit,
-                image_limit=args.image_limit,
+                image_limit=img_limit,
                 document_id=args.document_id,
             )
         finally:
             manager.close()
 
-        # Extract retrieved images
-        raw_images = retrieval_results.get("image_results", [])
-        for img in raw_images:
-            norm_path = str(img.get("image_path", "")).replace("\\", "/")
-            retrieved_images.append({
-                "image_id": img.get("image_id", img.get("id")),
-                "image_path": norm_path,
-                "image_type": "retrieved_from_pdf",
-                "page_number": img.get("page_number"),
-                "score": img.get("score"),
-                "surrounding_text": img.get("surrounding_text"),
-                "document_id": img.get("document_id"),
-            })
+        # Extract retrieved images ONLY when specifically requested
+        if routing["retrieve_pdf_images"]:
+            raw_images = retrieval_results.get("image_results", [])
+            for img in raw_images:
+                norm_path = str(img.get("image_path", "")).replace("\\", "/")
+                retrieved_images.append({
+                    "image_id": img.get("image_id", img.get("id")),
+                    "image_path": norm_path,
+                    "image_type": "retrieved_from_pdf",
+                    "page_number": img.get("page_number"),
+                    "score": img.get("score"),
+                    "surrounding_text": img.get("surrounding_text"),
+                    "document_id": img.get("document_id"),
+                })
 
         # Memory management: unload retrieval pipeline before loading Qwen
         del pipeline

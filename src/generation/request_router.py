@@ -75,8 +75,35 @@ class RequestRouter:
         normalized = query.lower().strip()
 
         wants_generation = any(keyword in normalized for keyword in self.GENERATE_KEYWORDS)
+        has_image_query = any(
+            k in normalized
+            for k in [
+                "image",
+                "diagram",
+                "figure",
+                "illustration",
+                "picture",
+                "chart",
+                "flowchart",
+                "photo",
+            ]
+        )
         wants_retrieval = any(keyword in normalized for keyword in self.RETRIEVE_KEYWORDS) or (
-            "original" in normalized and ("diagram" in normalized or "image" in normalized or "pdf" in normalized)
+            has_image_query
+            and any(
+                k in normalized
+                for k in [
+                    "pdf",
+                    "document",
+                    "show",
+                    "find",
+                    "display",
+                    "original",
+                    "view",
+                    "look at",
+                    "from",
+                ]
+            )
         )
         is_explanation = any(keyword in normalized for keyword in self.EXPLAIN_KEYWORDS)
 
@@ -86,18 +113,31 @@ class RequestRouter:
             generate_new_image = True
             answer_question = True
         elif wants_generation:
-            intent = "generate_image"
-            retrieve_pdf_images = False
-            generate_new_image = True
-            answer_question = False
-        elif wants_retrieval and not is_explanation:
-            intent = "retrieve_pdf_images"
-            retrieve_pdf_images = True
-            generate_new_image = False
-            answer_question = False
+            if is_explanation:
+                intent = "answer_and_generate"
+                retrieve_pdf_images = False
+                generate_new_image = True
+                answer_question = True
+            else:
+                intent = "generate_image"
+                retrieve_pdf_images = False
+                generate_new_image = True
+                answer_question = False
+        elif wants_retrieval:
+            if is_explanation:
+                intent = "answer"
+                retrieve_pdf_images = True
+                generate_new_image = False
+                answer_question = True
+            else:
+                intent = "retrieve_pdf_images"
+                retrieve_pdf_images = True
+                generate_new_image = False
+                answer_question = False
         else:
+            # Normal text question: provide answer only, no images unless specifically asked
             intent = "answer"
-            retrieve_pdf_images = True
+            retrieve_pdf_images = False
             generate_new_image = False
             answer_question = True
 
