@@ -28,6 +28,9 @@ class ChatInterface:
         image_limit: int = 4,
         operation: str = "auto",
         fast_mode: bool = True,
+        online_mode: bool = False,
+        cloud_provider: str = "gemini",
+        api_key: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Sends a query to the multimodal pipeline and loads the response payload."""
         resp_id = str(uuid.uuid4())
@@ -51,6 +54,11 @@ class ChatInterface:
 
         if document_id:
             base_command.extend(["--document-id", document_id])
+
+        if online_mode:
+            base_command.extend(["--online", "--provider", cloud_provider])
+            if api_key:
+                base_command.extend(["--api-key", api_key])
 
         command = list(base_command)
         if fast_mode:

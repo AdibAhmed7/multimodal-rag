@@ -6,6 +6,7 @@ Integrates:
 - Visual chat interface with original document figures, AI illustrations, and citations
 """
 
+import os
 from pathlib import Path
 import streamlit as st
 
@@ -82,17 +83,55 @@ with st.sidebar:
         st.session_state.active_document = None
 
     st.markdown("---")
-    st.subheader("3. Pipeline Parameters")
+    st.subheader("3. Model Engine (Online / Offline)")
+    backend_mode = st.radio(
+        "Execution Engine",
+        options=["online", "offline"],
+        format_func=lambda x: {
+            "online": "🌐 Online Cloud (Gemini / OpenAI)",
+            "offline": "💻 Offline Local (Fast CPU Synthesizer)",
+        }[x],
+        index=0,
+        help="Online mode uses fast cloud vision AI with zero local RAM load. Offline mode runs entirely on your local machine.",
+    )
+
+    online_mode = (backend_mode == "online")
+    cloud_provider = "gemini"
+    api_key_input = ""
+
+    if online_mode:
+        cloud_provider = st.selectbox(
+            "Cloud Provider",
+            options=["gemini", "openai"],
+            format_func=lambda x: "✨ Google Gemini (Recommended - Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
+            index=0,
+        )
+        env_key_name = f"{cloud_provider.upper()}_API_KEY"
+        default_key = os.environ.get(env_key_name, "")
+        api_key_input = st.text_input(
+            f"{cloud_provider.upper()} API Key",
+            value=default_key,
+            type="password",
+            placeholder="Paste your API key here...",
+            help="Your API key is kept secure for this session and sent directly to the official provider endpoint.",
+        )
+        if cloud_provider == "gemini" and not api_key_input:
+            st.caption("👉 [Get a free Google Gemini API Key here](https://aistudio.google.com/app/apikey)")
+        elif cloud_provider == "openai" and not api_key_input:
+            st.caption("👉 [Get an OpenAI API Key here](https://platform.openai.com/api-keys)")
+
+    st.markdown("---")
+    st.subheader("4. Pipeline Parameters")
     fast_mode = st.toggle(
-        "⚡ Fast CPU Mode (Instant Answers)",
+        "⚡ Fast CPU Fallback",
         value=True,
-        help="Generates evidence-grounded answers with citations instantly without exhausting CPU RAM.",
+        help="Enables fast evidence-grounded fallback if cloud requests fail or when running offline.",
     )
     text_limit = st.slider("Max Text Chunks", min_value=1, max_value=10, value=3)
     image_limit = st.slider("Max Retrieved Images", min_value=1, max_value=8, value=2)
 
     operation_mode = st.radio(
-        "Execution Mode",
+        "Operation Mode",
         options=["auto", "qa", "retrieve", "generate"],
         format_func=lambda x: {
             "auto": "🤖 Smart Router (Auto)",
@@ -166,6 +205,9 @@ if prompt := st.chat_input("Ask a question about the PDF or request a technical 
                         image_limit=image_limit,
                         operation=operation_mode,
                         fast_mode=fast_mode,
+                        online_mode=online_mode,
+                        cloud_provider=cloud_provider,
+                        api_key=api_key_input.strip() or None,
                     )
                     display_manager.display_response(response_payload)
                     add_message(

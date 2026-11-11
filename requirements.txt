@@ -42,3 +42,8 @@ psutil>=6.0,<8.0
 pandas>=2.2,<4.0
 matplotlib>=3.9,<4.0
 
+# Online Cloud Models (Gemini & OpenAI)
+google-genai>=0.1.0
+openai>=1.40.0
+
+

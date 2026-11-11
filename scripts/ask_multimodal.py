@@ -100,6 +100,22 @@ def main():
         help="Use fast evidence-grounded QA synthesis (recommended for CPU execution)",
     )
     parser.add_argument(
+        "--online",
+        action="store_true",
+        help="Use cloud-powered multimodal API (Google Gemini or OpenAI)",
+    )
+    parser.add_argument(
+        "--provider",
+        choices=["gemini", "openai"],
+        default="gemini",
+        help="Cloud provider when running in online mode (default: gemini)",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=None,
+        help="API key for cloud provider (or set GEMINI_API_KEY / OPENAI_API_KEY)",
+    )
+    parser.add_argument(
         "--database",
         default="data/processed/qdrant",
         help="Path to local Qdrant database",
@@ -231,7 +247,13 @@ def main():
         )
 
         print("\n[QA Engine] Generating evidence-grounded answer...")
-        answer_gen = AnswerGenerator(max_images=args.max_images, fast_mode=args.fast)
+        answer_gen = AnswerGenerator(
+            max_images=args.max_images,
+            fast_mode=args.fast,
+            online_mode=args.online,
+            cloud_provider=args.provider,
+            api_key=args.api_key,
+        )
         try:
             raw_qa = answer_gen.generate(query=args.query, context=context)
             answer = raw_qa.get("answer")
