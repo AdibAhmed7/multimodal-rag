@@ -18,6 +18,7 @@ def initialize_session() -> None:
         "text_limit": 5,
         "image_limit": 5,
         "max_generated_images": 1,
+        "current_diagram": None,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
