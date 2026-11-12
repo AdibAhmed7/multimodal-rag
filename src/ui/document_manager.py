@@ -109,3 +109,64 @@ class DocumentManager:
                 })
         return docs
 
+    def delete_document(self, document_id: str) -> None:
+        """Deletes raw PDF, metadata, chunks, embeddings, and extracted images for a document."""
+        import shutil
+
+        # 1. Raw PDF
+        raw_pdf = self.raw_dir / f"{document_id}.pdf"
+        if raw_pdf.exists():
+            raw_pdf.unlink(missing_ok=True)
+
+        # 2. Metadata JSON
+        meta_file = self.metadata_dir / f"{document_id}.json"
+        if meta_file.exists():
+            meta_file.unlink(missing_ok=True)
+
+        # 3. Chunks folder
+        chunks_folder = self.chunks_dir / document_id
+        if chunks_folder.exists():
+            shutil.rmtree(chunks_folder, ignore_errors=True)
+
+        # 4. Embeddings folder
+        emb_folder = self.embeddings_dir / document_id
+        if emb_folder.exists():
+            shutil.rmtree(emb_folder, ignore_errors=True)
+
+        # 5. Extracted images folder
+        images_folder = self.root / "data" / "processed" / "images" / document_id
+        if images_folder.exists():
+            shutil.rmtree(images_folder, ignore_errors=True)
+
+    def clear_all_documents(self) -> None:
+        """Removes all raw PDFs, processed artifacts, and resets the Qdrant vector database."""
+        import shutil
+
+        # Delete all files in raw_dir (except .gitkeep)
+        if self.raw_dir.exists():
+            for item in self.raw_dir.iterdir():
+                if item.name != ".gitkeep":
+                    if item.is_dir():
+                        shutil.rmtree(item, ignore_errors=True)
+                    else:
+                        item.unlink(missing_ok=True)
+
+        # Clean all subfolders in data/processed
+        processed_dir = self.root / "data" / "processed"
+        for sub_dir in [
+            "chunks", "metadata", "embeddings", "images", "qdrant",
+            "tables", "text", "contexts", "image_descriptions"
+        ]:
+            target = processed_dir / sub_dir
+            if target.exists():
+                shutil.rmtree(target, ignore_errors=True)
+            target.mkdir(parents=True, exist_ok=True)
+
+        # Clean generated diagrams and responses
+        gen_dir = self.root / "data" / "generated"
+        for sub_dir in ["diagrams", "responses"]:
+            target = gen_dir / sub_dir
+            if target.exists():
+                shutil.rmtree(target, ignore_errors=True)
+            target.mkdir(parents=True, exist_ok=True)
+

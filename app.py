@@ -82,6 +82,12 @@ with st.sidebar:
         )
         st.session_state.active_document = doc_ids[doc_names.index(selected_name)]
         st.info(f"Active ID: `{st.session_state.active_document}`")
+
+        if st.button("🗑️ Remove This Document", use_container_width=True, help="Deletes this document and its embeddings"):
+            document_manager.delete_document(st.session_state.active_document)
+            st.session_state.active_document = None
+            st.success("Document removed.")
+            st.rerun()
     else:
         st.warning("No documents indexed yet. Upload a PDF above.")
         st.session_state.active_document = None
@@ -123,9 +129,17 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    if st.button("🗑️ Clear Conversation", use_container_width=True):
-        clear_chat()
-        st.rerun()
+    col_c1, col_c2 = st.columns(2)
+    with col_c1:
+        if st.button("🗑️ Clear Chat", use_container_width=True):
+            clear_chat()
+            st.rerun()
+    with col_c2:
+        if st.button("💥 Reset All Docs", use_container_width=True, help="Wipes all uploaded PDFs and clears Qdrant vector database"):
+            document_manager.clear_all_documents()
+            st.session_state.active_document = None
+            st.success("All documents and vectors cleared.")
+            st.rerun()
 
 
 # -----------------------------------------------------------------------------
