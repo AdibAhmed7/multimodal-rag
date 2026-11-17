@@ -59,6 +59,8 @@ def main():
         image_dim = int(image_vectors.shape[1]) if image_vectors.ndim > 1 and image_vectors.shape[0] > 0 else 768
 
         manager.create_collection("text_chunks", vector_size=text_dim)
+        import time
+        time.sleep(0.3)
         manager.create_collection("document_images", vector_size=image_dim)
 
         # Index text chunks
