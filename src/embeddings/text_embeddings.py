@@ -43,9 +43,9 @@ class TextEmbeddingModel:
     def encode(
         self,
         texts: list[str],
-        batch_size: int = 16,
+        batch_size: int = 32,
     ) -> np.ndarray:
-        """Encode a list of text strings into normalized float32 vectors using Gemini."""
+        """Encode a list of text strings into normalized float32 vectors using Gemini with rate-limit protection."""
         dim = getattr(self, "dimension", 3072)
         if not texts:
             return np.empty((0, dim), dtype=np.float32)
@@ -55,15 +55,31 @@ class TextEmbeddingModel:
                 "GEMINI_API_KEY is not set. Please add GEMINI_API_KEY to your environment or .env file."
             )
 
+        import time
+
         all_vectors = []
-        for i in range(0, len(texts), batch_size):
+        total_batches = (len(texts) + batch_size - 1) // batch_size
+        for batch_idx, i in enumerate(range(0, len(texts), batch_size), start=1):
             batch = texts[i : i + batch_size]
-            response = self.client.models.embed_content(
-                model=self.model_name,
-                contents=batch,
-            )
-            for emb in response.embeddings:
-                all_vectors.append(emb.values)
+            max_retries = 6
+            for attempt in range(max_retries):
+                try:
+                    response = self.client.models.embed_content(
+                        model=self.model_name,
+                        contents=batch,
+                    )
+                    for emb in response.embeddings:
+                        all_vectors.append(emb.values)
+                    break
+                except Exception as e:
+                    err_msg = str(e).lower()
+                    if ("429" in err_msg or "resource_exhausted" in err_msg or "quota" in err_msg) and attempt < max_retries - 1:
+                        sleep_time = min(20.0 * (attempt + 1), 60.0)
+                        print(f"Notice: Gemini embedding rate limit on batch {batch_idx}/{total_batches}. Pausing {sleep_time:.0f}s before retry...")
+                        time.sleep(sleep_time)
+                    else:
+                        raise e
+            time.sleep(0.3)  # Gentle pacing between batches to respect rate limits
 
         arr = np.array(all_vectors, dtype=np.float32)
 
