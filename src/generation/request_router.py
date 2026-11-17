@@ -115,25 +115,46 @@ class RequestRouter:
                 "photo",
             ]
         )
-        wants_retrieval = any(keyword in normalized for keyword in self.RETRIEVE_KEYWORDS) or (
-            has_image_query
-            and any(
-                k in normalized
-                for k in [
-                    "pdf",
-                    "document",
-                    "show",
-                    "find",
-                    "display",
-                    "original",
-                    "view",
-                    "look at",
-                    "from",
-                ]
-            )
-            and not any(d_verb in normalized for d_verb in ["draw", "create", "generate", "make"])
+        wants_diagram_keyword = any(keyword in normalized for keyword in self.DIAGRAM_KEYWORDS)
+        explicit_original_figure = any(
+            keyword in normalized
+            for keyword in [
+                "original figure",
+                "original diagram",
+                "original image",
+                "figure from",
+                "image from",
+                "from the pdf",
+                "from the document",
+                "extract the diagram",
+                "extract the image",
+                "show the figure",
+                "show the photo",
+            ]
         )
-        wants_diagram = any(keyword in normalized for keyword in self.DIAGRAM_KEYWORDS) and not wants_retrieval
+
+        if wants_diagram_keyword and not explicit_original_figure:
+            wants_diagram = True
+            wants_retrieval = False
+        else:
+            wants_diagram = False
+            wants_retrieval = any(keyword in normalized for keyword in self.RETRIEVE_KEYWORDS) or (
+                has_image_query
+                and any(
+                    k in normalized
+                    for k in [
+                        "pdf",
+                        "document",
+                        "show the",
+                        "find the",
+                        "display the",
+                        "original",
+                        "view the",
+                    ]
+                )
+                and not any(d_verb in normalized for d_verb in ["draw", "create", "generate", "make"])
+            )
+
         wants_generation = any(keyword in normalized for keyword in self.GENERATE_KEYWORDS) and not wants_diagram
         is_explanation = any(keyword in normalized for keyword in self.EXPLAIN_KEYWORDS)
 
