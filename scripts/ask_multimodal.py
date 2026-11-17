@@ -10,7 +10,15 @@ Routes user requests between:
 import argparse
 import gc
 import json
+import os
 import sys
+
+# Ensure UTF-8 output on Windows consoles to prevent cp1252 charmap encoding errors
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -372,7 +380,10 @@ def main():
 
     if answer:
         print("\n--- Answer ---")
-        print(answer)
+        try:
+            print(answer)
+        except UnicodeEncodeError:
+            print(answer.encode("ascii", errors="replace").decode("ascii"))
 
     if retrieved_images:
         print(f"\n--- Retrieved PDF Images ({len(retrieved_images)}) ---")

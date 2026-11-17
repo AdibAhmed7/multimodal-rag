@@ -60,12 +60,16 @@ class ChatInterface:
         if api_key:
             command.extend(["--api-key", api_key])
 
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
+
         result = subprocess.run(
             command,
             cwd=str(self.root),
             capture_output=True,
             text=True,
             encoding="utf-8",
+            env=env,
         )
 
         if result.returncode != 0:

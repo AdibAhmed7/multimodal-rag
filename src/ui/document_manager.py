@@ -35,12 +35,15 @@ class DocumentManager:
         """Executes a pipeline script via subprocess from the project root."""
         script_path = self.root / "scripts" / script_name
         command = [sys.executable, str(script_path)] + [str(a) for a in args]
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
             command,
             cwd=str(self.root),
             capture_output=True,
             text=True,
             encoding="utf-8",
+            env=env,
         )
         if result.returncode != 0:
             err = result.stderr.strip() or result.stdout.strip()
