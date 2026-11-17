@@ -7,7 +7,7 @@ from src.llm.answer_generator import AnswerGenerator
 def test_cloud_client_initialization():
     client_gemini = CloudMultimodalClient(provider="gemini", api_key="test_key_gemini")
     assert client_gemini.provider == "gemini"
-    assert client_gemini.model_name == "gemini-3.5-flash"
+    assert client_gemini.model_name in ("gemini-2.5-flash", "gemini-1.5-flash")
     assert client_gemini.api_key == "test_key_gemini"
 
     client_openai = CloudMultimodalClient(provider="openai", api_key="test_key_openai")

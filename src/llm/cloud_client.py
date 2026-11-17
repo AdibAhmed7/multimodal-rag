@@ -36,7 +36,7 @@ class CloudMultimodalClient:
         )
 
         if self.provider == "gemini":
-            self.model_name = model_name or "gemini-3.5-flash"
+            self.model_name = model_name or "gemini-2.5-flash"
         elif self.provider in ("openai", "gpt"):
             self.provider = "openai"
             self.model_name = model_name or "gpt-4o-mini"
@@ -125,22 +125,37 @@ class CloudMultimodalClient:
         )
 
         candidate_models = [self.model_name]
-        for fallback in ["gemini-3.5-flash", "gemini-3.5-flash-lite"]:
+        for fallback in [
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-2.0-flash-lite",
+        ]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
+        import time
+
         last_error = None
         for m in candidate_models:
-            try:
-                response = client.models.generate_content(
-                    model=m,
-                    contents=contents,
-                    config=config,
-                )
-                return (response.text or "").strip()
-            except Exception as e:
-                last_error = e
-                print(f"Notice: Gemini generation with {m} returned: {e}. Trying fallback...")
+            for attempt in range(2):
+                try:
+                    response = client.models.generate_content(
+                        model=m,
+                        contents=contents,
+                        config=config,
+                    )
+                    return (response.text or "").strip()
+                except Exception as e:
+                    last_error = e
+                    err_msg = str(e).lower()
+                    if "503" in err_msg or "high demand" in err_msg or "resource_exhausted" in err_msg or "429" in err_msg:
+                        print(f"Notice: Gemini {m} attempt {attempt + 1} experienced transient spike: {e}. Retrying in 1.5s...")
+                        time.sleep(1.5 * (attempt + 1))
+                        continue
+                    else:
+                        print(f"Notice: Gemini generation with {m} returned: {e}. Trying next candidate model...")
+                        break
 
         raise RuntimeError(f"All candidate Gemini models failed. Last error: {last_error}")
 
