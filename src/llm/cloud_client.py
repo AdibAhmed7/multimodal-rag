@@ -19,11 +19,11 @@ if (repo_root / ".env").exists():
 
 
 class CloudMultimodalClient:
-    """Dispatches multimodal reasoning requests to Google Gemini or OpenAI Cloud APIs."""
+    """Dispatches multimodal reasoning requests to Groq, Google Gemini, or OpenAI Cloud APIs."""
 
     def __init__(
         self,
-        provider: str = "gemini",
+        provider: str = "groq",
         api_key: Optional[str] = None,
         model_name: Optional[str] = None,
     ):
@@ -31,22 +31,27 @@ class CloudMultimodalClient:
         self.api_key = (
             api_key
             or os.environ.get(f"{self.provider.upper()}_API_KEY")
+            or os.environ.get("GROQ_API_KEY")
             or os.environ.get("GEMINI_API_KEY")
             or os.environ.get("OPENAI_API_KEY")
         )
 
-        if self.provider == "gemini":
+        if self.provider == "groq":
+            self.model_name = model_name or "openai/gpt-oss-120b"
+        elif self.provider == "gemini":
             self.model_name = model_name or "gemini-2.5-flash"
         elif self.provider in ("openai", "gpt"):
             self.provider = "openai"
             self.model_name = model_name or "gpt-4o-mini"
         else:
-            raise ValueError(f"Unsupported cloud provider '{provider}'. Choose 'gemini' or 'openai'.")
+            raise ValueError(f"Unsupported cloud provider '{provider}'. Choose 'groq', 'gemini', or 'openai'.")
 
     @classmethod
-    def is_configured(cls, provider: str = "gemini") -> bool:
+    def is_configured(cls, provider: str = "groq") -> bool:
         """Check if an API key is present in environment for the specified provider."""
         p = provider.lower()
+        if p == "groq":
+            return bool(os.environ.get("GROQ_API_KEY"))
         if p == "gemini":
             return bool(os.environ.get("GEMINI_API_KEY"))
         if p in ("openai", "gpt"):
@@ -63,7 +68,7 @@ class CloudMultimodalClient:
     ) -> str:
         """Execute multimodal inference on the chosen cloud platform."""
         if not self.api_key:
-            key_name = "GEMINI_API_KEY" if self.provider == "gemini" else "OPENAI_API_KEY"
+            key_name = f"{self.provider.upper()}_API_KEY"
             raise ValueError(
                 f"Cloud API key missing for provider '{self.provider}'. "
                 f"Please set the {key_name} environment variable or provide it in the UI sidebar."
@@ -76,7 +81,15 @@ class CloudMultimodalClient:
                 if p_obj.exists():
                     images.append(p_obj)
 
-        if self.provider == "gemini":
+        if self.provider == "groq":
+            return self._generate_groq(
+                system_prompt=system_prompt,
+                user_text=user_text,
+                images=images,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+        elif self.provider == "gemini":
             return self._generate_gemini(
                 system_prompt=system_prompt,
                 user_text=user_text,
@@ -200,4 +213,48 @@ class CloudMultimodalClient:
             temperature=temperature,
         )
         return response.choices[0].message.content.strip()
+
+    def _generate_groq(
+        self,
+        system_prompt: str,
+        user_text: str,
+        images: List[Path],
+        max_tokens: int,
+        temperature: float,
+    ) -> str:
+        from openai import OpenAI
+
+        client = OpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=self.api_key,
+        )
+
+        content = user_text
+        if images:
+            image_notes = "\n".join([f"- Referenced figure / diagram: {img.name}" for img in images])
+            content = f"{user_text}\n\n[Referenced Document Figures]:\n{image_notes}\n"
+
+        candidate_models = [self.model_name]
+        for fb in ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"]:
+            if fb not in candidate_models:
+                candidate_models.append(fb)
+
+        last_error = None
+        for m in candidate_models:
+            try:
+                response = client.chat.completions.create(
+                    model=m,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": content},
+                    ],
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                )
+                return (response.choices[0].message.content or "").strip()
+            except Exception as e:
+                last_error = e
+                print(f"Notice: Groq model {m} returned {e}. Trying fallback...")
+
+        raise RuntimeError(f"All candidate Groq models failed. Last error: {last_error}")
 

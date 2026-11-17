@@ -27,7 +27,7 @@ class ChatInterface:
         text_limit: int = 5,
         image_limit: int = 4,
         operation: str = "auto",
-        cloud_provider: str = "gemini",
+        cloud_provider: str = "groq",
         api_key: Optional[str] = None,
         **kwargs: Any,
     ) -> Dict[str, Any]:

@@ -111,14 +111,14 @@ def main():
     )
     parser.add_argument(
         "--provider",
-        choices=["gemini", "openai"],
-        default="gemini",
-        help="Cloud provider when running in online mode (default: gemini)",
+        choices=["groq", "gemini", "openai"],
+        default="groq",
+        help="Cloud provider when running in online mode (default: groq)",
     )
     parser.add_argument(
         "--api-key",
         default=None,
-        help="API key for cloud provider (or set GEMINI_API_KEY / OPENAI_API_KEY)",
+        help="API key for cloud provider (or set GROQ_API_KEY / GEMINI_API_KEY / OPENAI_API_KEY)",
     )
     parser.add_argument(
         "--database",

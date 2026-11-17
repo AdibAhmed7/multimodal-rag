@@ -14,14 +14,16 @@ embeddings:
 
 llm:
   generation:
-    default_cloud_provider: "gemini"
+    default_cloud_provider: "groq"
+    groq_model: "openai/gpt-oss-120b"
     gemini_model: "gemini-2.5-flash"
     openai_model: "gpt-4o-mini"
     local_model: "Qwen/Qwen2.5-VL-3B-Instruct"
     temperature: 0.2
     max_tokens: 1024
   vision:
-    default_cloud_provider: "gemini"
+    default_cloud_provider: "groq"
+    groq_model: "openai/gpt-oss-120b"
     gemini_model: "gemini-2.5-flash"
     openai_model: "gpt-4o-mini"
     temperature: 0.2

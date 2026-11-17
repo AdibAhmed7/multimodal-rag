@@ -5,6 +5,11 @@ from src.llm.answer_generator import AnswerGenerator
 
 
 def test_cloud_client_initialization():
+    client_groq = CloudMultimodalClient(provider="groq", api_key="test_key_groq")
+    assert client_groq.provider == "groq"
+    assert client_groq.model_name == "openai/gpt-oss-120b"
+    assert client_groq.api_key == "test_key_groq"
+
     client_gemini = CloudMultimodalClient(provider="gemini", api_key="test_key_gemini")
     assert client_gemini.provider == "gemini"
     assert client_gemini.model_name in ("gemini-2.5-flash", "gemini-1.5-flash")
@@ -67,6 +72,29 @@ def test_cloud_client_mock_openai():
         )
 
         assert result == "OpenAI answer citing [Page 2]."
+        mock_client_instance.chat.completions.create.assert_called_once()
+
+
+def test_cloud_client_mock_groq():
+    client = CloudMultimodalClient(provider="groq", api_key="fake_key")
+
+    mock_choice = MagicMock()
+    mock_choice.message.content = "Groq answer citing [Page 1]."
+    mock_response = MagicMock()
+    mock_response.choices = [mock_choice]
+
+    with patch("openai.OpenAI") as mock_openai_class:
+        mock_client_instance = MagicMock()
+        mock_client_instance.chat.completions.create.return_value = mock_response
+        mock_openai_class.return_value = mock_client_instance
+
+        result = client.generate(
+            system_prompt="System instructions",
+            user_text="What is on page 1?",
+            image_paths=[],
+        )
+
+        assert result == "Groq answer citing [Page 1]."
         mock_client_instance.chat.completions.create.assert_called_once()
 
 

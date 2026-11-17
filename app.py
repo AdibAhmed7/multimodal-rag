@@ -96,8 +96,8 @@ with st.sidebar:
     st.subheader("3. Cloud Model Engine")
     cloud_provider = st.selectbox(
         "Provider",
-        options=["gemini", "openai"],
-        format_func=lambda x: "✨ Google Gemini (Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)",
+        options=["groq", "gemini", "openai"],
+        format_func=lambda x: "⚡ Groq (Ultra-Fast 120B LPU)" if x == "groq" else ("✨ Google Gemini (Free Tier)" if x == "gemini" else "🤖 OpenAI (GPT-4o)"),
         index=0,
         help="Multimodal inference is processed via official cloud endpoints using your .env credentials.",
     )

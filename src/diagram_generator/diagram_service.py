@@ -35,7 +35,7 @@ def generate_diagram(
         Structured response dictionary containing status, diagram_type, mermaid_code, and sources.
     """
     if llm is None:
-        llm = CloudMultimodalClient(provider="gemini")
+        llm = CloudMultimodalClient(provider="groq")
 
     if isinstance(retrieved_context, dict):
         pages = retrieved_context.get("pages", [])

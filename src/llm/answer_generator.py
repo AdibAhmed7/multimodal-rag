@@ -16,7 +16,7 @@ class AnswerGenerator:
         max_new_tokens: int = 700,
         fast_mode: bool = False,
         online_mode: bool = True,
-        cloud_provider: str = "gemini",
+        cloud_provider: str = "groq",
         api_key: Optional[str] = None,
         **kwargs: Any,
     ):
