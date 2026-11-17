@@ -46,3 +46,10 @@ data/processed/*
 !data/processed/.gitkeep
 data/generated/*
 !data/generated/.gitkeep
+
+# Data
+raw_data/
+processed_data/
+
+# Results
+results/
