@@ -6,12 +6,12 @@ from src.embeddings.image_embeddings import ImageEmbeddingModel
 
 
 def test_empty_text_embeddings():
-    """Verify empty input returns proper empty array with 1024 dimensions."""
+    """Verify empty input returns proper empty array with 3072 dimensions."""
     # We can test encode([]) on a model instance or mock
     model = object.__new__(TextEmbeddingModel)
     result = model.encode([])
     assert isinstance(result, np.ndarray)
-    assert result.shape == (0, 1024)
+    assert result.shape == (0, 3072)
     assert result.dtype == np.float32
 
 
@@ -55,7 +55,7 @@ def test_empty_image_and_text_siglip():
 
 def test_vectors_npz_manifest_roundtrip(tmp_path):
     """Verify saving and reading vectors.npz and manifest.json."""
-    text_vecs = np.random.randn(3, 1024).astype(np.float32)
+    text_vecs = np.random.randn(3, 3072).astype(np.float32)
     img_vecs = np.random.randn(2, 768).astype(np.float32)
 
     npz_path = tmp_path / "vectors.npz"

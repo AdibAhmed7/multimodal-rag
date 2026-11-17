@@ -88,7 +88,7 @@ def create_comparison_chart(
     ]
 
     df = pd.DataFrame({
-        "Text (BGE-M3)": text_vals,
+        "Text (Gemini)": text_vals,
         "Image (SigLIP 2)": image_vals,
     }, index=metrics)
 
@@ -97,7 +97,7 @@ def create_comparison_chart(
 
     ax.set_ylim(0, 1.1)
     ax.set_ylabel("Score (0.0 - 1.0)", fontsize=11, fontweight="bold")
-    ax.set_title("Multimodal Retrieval Comparison: BGE-M3 vs. SigLIP 2", fontsize=13, fontweight="bold", pad=12)
+    ax.set_title("Multimodal Retrieval Comparison: Gemini vs. SigLIP 2", fontsize=13, fontweight="bold", pad=12)
     ax.legend(frameon=True, facecolor="#F8FAFC")
     ax.grid(axis="y", linestyle="--", alpha=0.5)
     plt.xticks(rotation=0, fontsize=10, fontweight="bold")
@@ -144,7 +144,7 @@ def generate_markdown_report(
         "",
         "## 1. Executive Summary & Objectives",
         "",
-        "This evaluation report establishes empirical performance benchmarks for our end-to-end **Multimodal Retrieval-Augmented Generation (RAG)** pipeline. The system combines local vector indexing with **Qdrant**, dense semantic text search with **BAAI/bge-m3**, visual embedding search with **google/siglip2-base-patch16-224**, Reciprocal Rank Fusion (**RRF**), grounded visual question answering (**Qwen2.5-VL**), and generative visual synthesis (**Stable Diffusion Turbo**).",
+        "This evaluation report establishes empirical performance benchmarks for our end-to-end **Multimodal Retrieval-Augmented Generation (RAG)** pipeline. The system combines local vector indexing with **Qdrant**, dense semantic text search with **Google Gemini (gemini-embedding-001)**, visual embedding search with **google/siglip2-base-patch16-224**, Reciprocal Rank Fusion (**RRF**), grounded visual question answering (**Qwen2.5-VL**), and generative visual synthesis (**Stable Diffusion Turbo**).",
         "",
         "Evaluation focuses on three core dimensions:",
         "1. **Retrieval Quality**: Precision@5, Recall@5, and Mean Reciprocal Rank (MRR).",
@@ -184,7 +184,7 @@ def generate_markdown_report(
         "",
         "## 4. Empirical Retrieval Results",
         "",
-        "### 4.1 Text Retrieval Performance (BGE-M3)",
+        "### 4.1 Text Retrieval Performance (Gemini)",
         "",
         f"- **Precision@5**: `{t_sum.get('precision_at_k', 0.0):.4f}` (Page-level: `{t_sum.get('page_precision_at_k', 0.0):.4f}`)",
         f"- **Recall@5**: `{t_sum.get('recall_at_k', 0.0):.4f}` (Page-level: `{t_sum.get('page_recall_at_k', 0.0):.4f}`)",
@@ -265,7 +265,7 @@ def main():
 
     t_chart = create_retrieval_chart(
         summary=text_eval["summary"],
-        title="Text Retrieval Evaluation (BGE-M3 @ K=5)",
+        title="Text Retrieval Evaluation (Gemini @ K=5)",
         output_filename="text_retrieval_metrics.png",
         color_palette="#2563EB",
     )

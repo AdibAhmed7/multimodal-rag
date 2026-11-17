@@ -1,7 +1,7 @@
 """Multimodal RAG Orchestrator (Phase 8).
 
 Routes user requests between:
-1. PDF retrieval (Qdrant + SigLIP 2 / BGE-M3)
+1. PDF retrieval (Qdrant + SigLIP 2 / Gemini)
 2. Question answering (Qwen2.5-VL)
 3. AI image generation (Stable Diffusion Turbo)
 4. Combined multimodal operations

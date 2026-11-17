@@ -22,7 +22,7 @@ def main():
         # -------------------------------------------------------------
         # TEST 1: Text-to-Text Search
         # -------------------------------------------------------------
-        print("\n[TEST 1] Text-to-Text Retrieval (BGE-M3)...")
+        print("\n[TEST 1] Text-to-Text Retrieval (Gemini)...")
         query_text = "attention mechanism and encoder decoder"
         text_results = pipeline.search_text(query_text, limit=3)
         assert len(text_results) > 0, "Expected non-empty text results!"

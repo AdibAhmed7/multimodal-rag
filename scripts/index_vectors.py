@@ -55,7 +55,7 @@ def main():
     manager = QdrantManager(database_path=args.database)
     try:
         # Create collections
-        text_dim = int(text_vectors.shape[1]) if text_vectors.ndim > 1 and text_vectors.shape[0] > 0 else 1024
+        text_dim = int(text_vectors.shape[1]) if text_vectors.ndim > 1 and text_vectors.shape[0] > 0 else 3072
         image_dim = int(image_vectors.shape[1]) if image_vectors.ndim > 1 and image_vectors.shape[0] > 0 else 768
 
         manager.create_collection("text_chunks", vector_size=text_dim)

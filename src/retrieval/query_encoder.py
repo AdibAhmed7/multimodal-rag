@@ -4,26 +4,23 @@ import numpy as np
 import torch
 from PIL import Image
 from transformers import AutoModel, AutoProcessor
-from sentence_transformers import SentenceTransformer
+from src.embeddings.text_embeddings import TextEmbeddingModel
 
 
 class QueryEncoder:
     """Encodes user queries into vector spaces for text and image retrieval.
 
-    - BGE-M3 (1024D) for text-to-text retrieval.
+    - Gemini Cloud Embeddings (3072D) for text-to-text retrieval.
     - SigLIP 2 (768D) for text-to-image and image-to-image retrieval.
     """
 
     def __init__(
         self,
-        text_model_name: str = "BAAI/bge-m3",
+        text_model_name: str = "gemini-embedding-001",
         image_model_name: str = "google/siglip2-base-patch16-224",
     ):
-        print(f"Loading BGE-M3 text model ({text_model_name})...")
-        try:
-            self.text_model = SentenceTransformer(text_model_name, local_files_only=True)
-        except Exception:
-            self.text_model = SentenceTransformer(text_model_name)
+        print(f"Initializing Gemini text embedding model ({text_model_name})...")
+        self.text_model = TextEmbeddingModel(model_name=text_model_name)
 
         print(f"Loading SigLIP 2 multimodal model ({image_model_name})...")
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -61,17 +58,13 @@ class QueryEncoder:
         return (vector / norm).astype(np.float32)
 
     def encode_text_for_text_search(self, query: str) -> np.ndarray:
-        """Encode query text using BGE-M3 into a normalized 1024D vector."""
+        """Encode query text using Gemini into a normalized 3072D vector."""
+        dim = getattr(self.text_model, "dimension", 3072)
         if not query or not query.strip():
-            return np.zeros(1024, dtype=np.float32)
+            return np.zeros(dim, dtype=np.float32)
 
-        vector = self.text_model.encode(
-            query,
-            convert_to_numpy=True,
-            normalize_embeddings=True,
-            show_progress_bar=False,
-        )
-        return vector.astype(np.float32)
+        vectors = self.text_model.encode([query])
+        return vectors[0].astype(np.float32)
 
     def encode_text_for_image_search(self, query: str) -> np.ndarray:
         """Encode query text using SigLIP 2 into a normalized 768D vector."""

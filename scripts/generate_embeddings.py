@@ -33,8 +33,8 @@ def main():
     )
     parser.add_argument(
         "--text-model",
-        default="BAAI/bge-m3",
-        help="Hugging Face model name for text embeddings.",
+        default="gemini-embedding-001",
+        help="Google Gemini model name for text embeddings.",
     )
     parser.add_argument(
         "--image-model",
@@ -71,8 +71,8 @@ def main():
     doc_output_dir = output_base if output_base.name == doc_id else output_base / doc_id
     doc_output_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Generate text embeddings (BGE-M3)
-    print("\n[1/2] Generating BGE-M3 text embeddings...")
+    # 1. Generate text embeddings (Gemini)
+    print("\n[1/2] Generating Gemini text embeddings...")
     text_model = TextEmbeddingModel(model_name=args.text_model)
     texts = [record["content"] for record in text_records]
     text_vectors = text_model.encode(texts, batch_size=args.batch_size)

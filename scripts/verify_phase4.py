@@ -33,13 +33,13 @@ def main():
         params_text = info_text.config.params.vectors
         print(f"Vector size: {params_text.size}, Distance: {params_text.distance}")
         assert info_text.points_count == len(manifest["text_records"]), "Text points count mismatch!"
-        assert params_text.size == 1024, "Text vector dimension is not 1024!"
+        assert params_text.size == 3072, "Text vector dimension is not 3072!"
 
         records_text, _ = manager.client.scroll("text_chunks", limit=10, with_payload=True, with_vectors=True)
         for r in records_text:
             payload = r.payload
             print(f"  ✓ Point ID: {r.id} | Chunk: {payload['chunk_id']} | Page: {payload['page_number']} | Related Images: {payload['related_image_ids']}")
-            assert len(r.vector) == 1024
+            assert len(r.vector) == 3072
             assert payload["content"]
 
         print("\n=== 3. Validating document_images Collection ===")

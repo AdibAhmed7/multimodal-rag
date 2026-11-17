@@ -12,7 +12,7 @@ from src.retrieval.retrieval_pipeline import MultimodalRetrievalPipeline
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Test text chunk retrieval using BGE-M3.")
+    parser = argparse.ArgumentParser(description="Test text chunk retrieval using Gemini cloud embeddings.")
     parser.add_argument(
         "--query",
         default="What is the main topic of this document?",

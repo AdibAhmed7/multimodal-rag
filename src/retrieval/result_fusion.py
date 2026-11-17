@@ -8,7 +8,7 @@ def reciprocal_rank_fusion(
     """Combine ranked result lists using Reciprocal Rank Fusion (RRF).
 
     Combines ranking positions from separate heterogeneous search spaces (e.g.
-    BGE-M3 text and SigLIP 2 vision) without assuming identical calibration of scores.
+    Gemini text and SigLIP 2 vision) without assuming identical calibration of scores.
 
     Args:
         result_lists: Sequence of ordered result lists.

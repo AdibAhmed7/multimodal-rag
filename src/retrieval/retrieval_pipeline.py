@@ -15,7 +15,7 @@ class MultimodalRetrievalPipeline:
     def __init__(
         self,
         qdrant_client: QdrantClient,
-        text_model_name: str = "BAAI/bge-m3",
+        text_model_name: str = "gemini-embedding-001",
         image_model_name: str = "google/siglip2-base-patch16-224",
     ):
         print("Initializing retrieval pipeline...")
@@ -33,7 +33,7 @@ class MultimodalRetrievalPipeline:
         limit: int = 5,
         document_id: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """Retrieve relevant text chunks using BGE-M3 query vector."""
+        """Retrieve relevant text chunks using Gemini query vector."""
         vector = self.query_encoder.encode_text_for_text_search(query)
         return self.text_retriever.search(
             query_vector=vector,

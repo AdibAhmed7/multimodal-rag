@@ -73,7 +73,7 @@ class DocumentManager:
                 raise FileNotFoundError(f"Chunk directory not found: {doc_chunks_dir}")
 
             # Step 3: Embeddings generation
-            st.write("Step 3/4: Generating BGE-M3 & SigLIP 2 embeddings...")
+            st.write("Step 3/4: Generating Gemini & SigLIP 2 embeddings...")
             self.run_script("generate_embeddings.py", str(doc_chunks_dir))
             doc_embeddings_dir = self.embeddings_dir / document_id
             if not doc_embeddings_dir.exists():

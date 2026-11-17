@@ -2,10 +2,10 @@
 
 embeddings:
   text:
-    provider: "huggingface"
-    model_name: "BAAI/bge-m3"
-    dimension: 1024
-    batch_size: 4
+    provider: "gemini"
+    model_name: "gemini-embedding-001"
+    dimension: 3072
+    batch_size: 16
   vision:
     provider: "huggingface"
     model_name: "google/siglip2-base-patch16-224"

@@ -3,7 +3,7 @@ from qdrant_client import QdrantClient, models
 
 
 class TextRetriever:
-    """Searches the text_chunks collection using BGE-M3 text query vectors."""
+    """Searches the text_chunks collection using text query vectors."""
 
     def __init__(self, client: QdrantClient, collection_name: str = "text_chunks"):
         self.client = client

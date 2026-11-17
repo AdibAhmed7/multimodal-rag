@@ -40,7 +40,7 @@ def main():
     manager = QdrantManager(database_path=qdrant_dir)
 
     try:
-        print("\nLoading Multimodal Retrieval Pipeline (BGE-M3 & SigLIP 2)...")
+        print("\nLoading Multimodal Retrieval Pipeline (Gemini & SigLIP 2)...")
         with monitor.measure("pipeline_initialization"):
             pipeline = MultimodalRetrievalPipeline(manager.client)
 
